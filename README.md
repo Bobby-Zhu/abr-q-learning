@@ -13,11 +13,26 @@ metadata from the authors' repositories.
 
 The simulator accepts a bitrate index for each chunk and returns download
 delay, buffer level, rebuffering, measured throughput, QoE reward, and episode
-status. A linear buffer-based baseline is implemented; the fixed-bitrate and
-Q-learning policies are still future stages.
+status. Fixed-bitrate and linear buffer-based baselines are implemented along
+with deterministic train/validation/test manifests. Q-learning is the
+remaining model stage.
 
 See [docs/SIMULATOR.md](docs/SIMULATOR.md) for the simulation rules and the
 configuration inherited from MERINA.
+
+## Run the fixed-bitrate baseline
+
+The declared fixed baseline selects 1200 Kbit/s for every chunk:
+
+```bash
+python3 scripts/run_fixed_baseline.py
+```
+
+Other ladder entries can be explored explicitly, for example:
+
+```bash
+python3 scripts/run_fixed_baseline.py --bitrate-index 0 --limit 1
+```
 
 ## Run the buffer-based baseline
 
@@ -62,8 +77,10 @@ PYTHONPATH=src python3 -m unittest discover -s tests -v
 ```text
 src/abr_simulator/             Simulator, policies, evaluation, and QoE
 data/video_sizes/mao/          49 chunk sizes at each of six bitrate levels
-data/traces/fcc_hsdpa/         Upstream training and untouched holdout traces
+data/traces/fcc_hsdpa/         Imported upstream trace files
+data/splits/                   Deterministic train/validation/test manifests
 scripts/smoke_simulator.py     Full-video fixed-bitrate smoke run
+scripts/run_fixed_baseline.py   Fixed-baseline evaluation
 scripts/run_buffer_baseline.py  Buffer-baseline evaluation
 tests/                         Simulator, policy, and metrics checks
 docs/SIMULATOR.md              Simulator contract and design notes

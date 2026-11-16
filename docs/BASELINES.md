@@ -1,5 +1,24 @@
 # Baseline policies
 
+## Fixed-bitrate baseline
+
+`FixedBitratePolicy` selects the same bitrate for every chunk regardless of
+buffer occupancy or network throughput. The declared default is bitrate index
+2, or 1200 Kbit/s. It provides a simple reference point for determining
+whether adaptation itself improves QoE.
+
+The policy has no training parameters. The command-line script accepts another
+bitrate index for exploratory comparisons, but the primary fixed baseline must
+remain 1200 Kbit/s when final results are reported.
+
+Run it over all training traces with:
+
+```bash
+python3 scripts/run_fixed_baseline.py
+```
+
+The implementation is in `src/abr_simulator/policies/fixed_bitrate.py`.
+
 ## Buffer-based baseline
 
 `BufferBasedPolicy` is a deterministic reference policy. It does not train,
@@ -62,7 +81,7 @@ mean rebuffering per episode, mean switches per episode, and average bitrate
 change per chunk. All current videos contain 49 chunks, but aggregation still
 weights chunk-level quantities by their actual chunk counts.
 
-## Commands
+## Buffer-baseline commands
 
 Evaluate all 166 training traces with the declared baseline:
 
@@ -76,5 +95,6 @@ Print per-trace results or run a short smoke evaluation:
 python3 scripts/run_buffer_baseline.py --limit 3 --per-trace
 ```
 
-The script supports `--split holdout` for the later evaluation stage. Do not
-use holdout results to choose reservoir or cushion values.
+Both baseline scripts support the declared `train`, `validation`, and `test`
+manifests. Validation may be used for development choices. Do not run or
+inspect test results until every policy and hyperparameter is frozen.

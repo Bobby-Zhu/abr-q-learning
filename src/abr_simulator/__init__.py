@@ -1,6 +1,7 @@
 """Trace-driven adaptive-bitrate video streaming simulator."""
 
 from .config import SimulatorConfig
+from .dataset import load_trace_manifest
 from .environment import ABREnvironment, StepResult
 from .evaluation import (
     AggregateMetrics,
@@ -8,7 +9,7 @@ from .evaluation import (
     aggregate_metrics,
     run_episode,
 )
-from .policies import BufferBasedPolicy
+from .policies import BufferBasedPolicy, FixedBitratePolicy
 from .qoe import linear_qoe_reward
 from .trace import NetworkTrace, load_trace, load_traces
 from .video import VideoMetadata, load_video_metadata
@@ -18,6 +19,7 @@ __all__ = [
     "AggregateMetrics",
     "BufferBasedPolicy",
     "EpisodeMetrics",
+    "FixedBitratePolicy",
     "NetworkTrace",
     "SimulatorConfig",
     "StepResult",
@@ -25,6 +27,7 @@ __all__ = [
     "aggregate_metrics",
     "linear_qoe_reward",
     "load_trace",
+    "load_trace_manifest",
     "load_traces",
     "load_video_metadata",
     "run_episode",

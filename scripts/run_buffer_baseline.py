@@ -14,7 +14,7 @@ from abr_simulator import (  # noqa: E402
     BufferBasedPolicy,
     SimulatorConfig,
     aggregate_metrics,
-    load_traces,
+    load_trace_manifest,
     load_video_metadata,
     run_episode,
 )
@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--split",
-        choices=("train", "holdout"),
+        choices=("train", "validation", "test"),
         default="train",
         help="Trace directory to evaluate (default: train)",
     )
@@ -68,8 +68,10 @@ def main() -> None:
         cushion_s=args.cushion,
     )
     video = load_video_metadata(PROJECT_ROOT / "data/video_sizes/mao")
-    trace_directory = PROJECT_ROOT / "data/traces/fcc_hsdpa" / args.split
-    traces = load_traces(trace_directory)
+    traces = load_trace_manifest(
+        PROJECT_ROOT / "data/splits" / f"{args.split}.txt",
+        PROJECT_ROOT / "data",
+    )
     if args.limit:
         traces = traces[: args.limit]
 

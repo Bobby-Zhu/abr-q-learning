@@ -94,17 +94,17 @@ The local data mirrors two folders from the bandwidth-trace repository:
 
 | Local directory | Upstream directory | Files | Current use |
 | --- | --- | ---: | --- |
-| `data/traces/fcc_hsdpa/train` | `fcc_and_hsdpa/cooked_traces` | 166 | Training candidates |
-| `data/traces/fcc_hsdpa/holdout` | `fcc_and_hsdpa/test_traces` | 262 | Untouched split candidates |
+| `data/traces/fcc_hsdpa/train` | `fcc_and_hsdpa/cooked_traces` | 166 | Training split |
+| `data/traces/fcc_hsdpa/holdout` | `fcc_and_hsdpa/test_traces` | 262 | Source for validation/test |
 
 Each file contains whitespace-separated `timestamp_seconds bandwidth_Mbps`
 rows. A zero bandwidth value represents a real outage and is supported by the
 simulator.
 
-The `holdout` name is intentional. Stage 1 does **not** yet decide which of
-those files will be validation traces and which will be final test traces.
-That deterministic split will be made before tuning Q-learning, so the final
-test subset remains unseen.
+The immutable manifests in `data/splits` declare 166 training, 131 validation,
+and 131 final test traces. The upstream holdout set was divided equally within
+FCC and HSDPA, giving validation and test 44 FCC plus 87 HSDPA traces each.
+See `data/splits/README.md` for the deterministic SHA-256 procedure.
 
 ## Adaptations from the upstream API
 
@@ -121,7 +121,8 @@ version changes the interface to make experiments safer and easier to test:
 - The implementation uses only the Python standard library.
 
 State discretization, baseline thresholds, Q-learning hyperparameters, and the
-final validation/test split are intentionally outside Stage 1.
+validation/test split are experiment-layer choices outside the Stage 1
+simulator itself.
 
 ## Verification
 
