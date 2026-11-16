@@ -13,10 +13,29 @@ metadata from the authors' repositories.
 
 The simulator accepts a bitrate index for each chunk and returns download
 delay, buffer level, rebuffering, measured throughput, QoE reward, and episode
-status. No baseline or Q-learning policy has been implemented yet.
+status. A linear buffer-based baseline is implemented; the fixed-bitrate and
+Q-learning policies are still future stages.
 
 See [docs/SIMULATOR.md](docs/SIMULATOR.md) for the simulation rules and the
 configuration inherited from MERINA.
+
+## Run the buffer-based baseline
+
+The default command evaluates the fixed 10-second reservoir and 40-second
+cushion policy on all training traces:
+
+```bash
+python3 scripts/run_buffer_baseline.py
+```
+
+For a quick single-trace check:
+
+```bash
+python3 scripts/run_buffer_baseline.py --limit 1 --per-trace
+```
+
+See [docs/BASELINES.md](docs/BASELINES.md) for the policy definition and metric
+semantics.
 
 ## Run the Stage 1 smoke test
 
@@ -41,13 +60,15 @@ PYTHONPATH=src python3 -m unittest discover -s tests -v
 ## Repository layout
 
 ```text
-src/abr_simulator/          Simulator, loaders, configuration, and QoE
-data/video_sizes/mao/       49 chunk sizes at each of six bitrate levels
-data/traces/fcc_hsdpa/      Upstream training and untouched holdout traces
-scripts/smoke_simulator.py  Full-video fixed-bitrate smoke run
-tests/                      Simulator mechanics and imported-data checks
-docs/SIMULATOR.md           Simulator contract and design notes
-third_party/licenses/       Required upstream MIT licenses
+src/abr_simulator/             Simulator, policies, evaluation, and QoE
+data/video_sizes/mao/          49 chunk sizes at each of six bitrate levels
+data/traces/fcc_hsdpa/         Upstream training and untouched holdout traces
+scripts/smoke_simulator.py     Full-video fixed-bitrate smoke run
+scripts/run_buffer_baseline.py  Buffer-baseline evaluation
+tests/                         Simulator, policy, and metrics checks
+docs/SIMULATOR.md              Simulator contract and design notes
+docs/BASELINES.md              Baseline rules and evaluation metrics
+third_party/licenses/          Required upstream MIT licenses
 ```
 
 Third-party provenance is recorded in
