@@ -101,10 +101,12 @@ Each file contains whitespace-separated `timestamp_seconds bandwidth_Mbps`
 rows. A zero bandwidth value represents a real outage and is supported by the
 simulator.
 
-The immutable manifests in `data/splits` declare 166 training, 131 validation,
-and 131 final test traces. The upstream holdout set was divided equally within
-FCC and HSDPA, giving validation and test 44 FCC plus 87 HSDPA traces each.
-See `data/splits/README.md` for the deterministic SHA-256 procedure.
+The immutable manifests in `data/splits` declare 166 training, 129 validation,
+and 133 final test traces. The upstream holdout set was divided by source
+recording within FCC and HSDPA, so slices of one recording never appear in both
+validation and test. Validation has 43 FCC plus 86 HSDPA traces and test has
+45 FCC plus 88 HSDPA traces. See `data/splits/README.md` for the deterministic
+SHA-256 procedure.
 
 ## Adaptations from the upstream API
 

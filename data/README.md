@@ -11,7 +11,7 @@ whitespace. Do not modify the imported files in place. Any future split
 manifests or processed data should be stored separately so provenance remains
 clear.
 
-The committed manifests in `splits/` now define the 166/131/131
+The committed manifests in `splits/` now define the 166/129/133
 train/validation/test partition without moving or changing imported files.
 
 Sources, exact commits, and licenses are listed in

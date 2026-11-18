@@ -3,6 +3,8 @@
 
 import argparse
 import hashlib
+import re
+from collections import defaultdict
 from pathlib import Path
 
 
@@ -11,11 +13,38 @@ DATA_ROOT = PROJECT_ROOT / "data"
 TRACE_ROOT = DATA_ROOT / "traces/fcc_hsdpa"
 SPLIT_ROOT = DATA_ROOT / "splits"
 SEED = 42
+PART_SUFFIX = re.compile(r"_part\d+\.log$")
 
 
-def stable_rank(path: Path) -> tuple[str, str]:
-    digest = hashlib.sha256(f"{SEED}:{path.name}".encode()).hexdigest()
-    return digest, path.name
+def recording_id(name: str) -> str:
+    """Return the source recording of a trace file.
+
+    Upstream holdout files are consecutive slices of longer recordings named
+    ``<recording>_part<N>.log``. Slices of one recording must stay in one split,
+    otherwise validation and test share neighbouring minutes of the same trip.
+    """
+
+    return PART_SUFFIX.sub("", name)
+
+
+def stable_rank(recording: str) -> tuple[str, str]:
+    digest = hashlib.sha256(f"{SEED}:{recording}".encode()).hexdigest()
+    return digest, recording
+
+
+def split_by_recording(paths: list[Path]) -> tuple[list[Path], list[Path]]:
+    """Assign whole recordings, in stable hash order, to the smaller side."""
+
+    groups: dict[str, list[Path]] = defaultdict(list)
+    for path in paths:
+        groups[recording_id(path.name)].append(path)
+
+    validation: list[Path] = []
+    test: list[Path] = []
+    for recording in sorted(groups, key=stable_rank):
+        target = validation if len(validation) <= len(test) else test
+        target.extend(groups[recording])
+    return validation, test
 
 
 def relative_entries(paths: list[Path]) -> tuple[str, ...]:
@@ -28,15 +57,23 @@ def build_manifests() -> dict[str, tuple[str, ...]]:
         path for path in (TRACE_ROOT / "holdout").iterdir() if path.is_file()
     )
 
-    fcc = sorted((path for path in holdout if path.name.startswith("trace_")), key=stable_rank)
-    hsdpa = sorted((path for path in holdout if not path.name.startswith("trace_")), key=stable_rank)
-    if len(fcc) % 2 or len(hsdpa) % 2:
-        raise RuntimeError("each source group must have an even number of holdout traces")
+    fcc = [path for path in holdout if path.name.startswith("trace_")]
+    hsdpa = [path for path in holdout if not path.name.startswith("trace_")]
+    fcc_validation, fcc_test = split_by_recording(fcc)
+    hsdpa_validation, hsdpa_test = split_by_recording(hsdpa)
+    validation = fcc_validation + hsdpa_validation
+    test = fcc_test + hsdpa_test
 
-    fcc_midpoint = len(fcc) // 2
-    hsdpa_midpoint = len(hsdpa) // 2
-    validation = fcc[:fcc_midpoint] + hsdpa[:hsdpa_midpoint]
-    test = fcc[fcc_midpoint:] + hsdpa[hsdpa_midpoint:]
+    recordings = {
+        name: {recording_id(path.name) for path in paths}
+        for name, paths in (("train", train), ("validation", validation), ("test", test))
+    }
+    for first, second in (("train", "validation"), ("train", "test"), ("validation", "test")):
+        shared = recordings[first] & recordings[second]
+        if shared:
+            raise RuntimeError(
+                f"recordings shared by {first} and {second}: {', '.join(sorted(shared))}"
+            )
 
     return {
         "train": relative_entries(train),
