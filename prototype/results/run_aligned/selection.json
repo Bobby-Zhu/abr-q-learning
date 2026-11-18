@@ -1,0 +1,88 @@
+{
+  "seed": 42,
+  "learning_rate": 0.1,
+  "discount": 0.95,
+  "checkpoints": [
+    1,
+    3,
+    6,
+    12,
+    24,
+    40
+  ],
+  "selected_epoch": 6,
+  "selected_validation_mean_chunk_qoe": 0.7942846740175878,
+  "throughput_edges_mbps": [
+    0.75,
+    1.2,
+    1.85,
+    2.85,
+    4.3
+  ],
+  "buffer_edges_s": [
+    4,
+    8,
+    16,
+    32
+  ],
+  "initial_state": 180,
+  "simulator": {
+    "bitrates_kbps": [
+      300,
+      750,
+      1200,
+      1850,
+      2850,
+      4300
+    ],
+    "chunk_duration_s": 4.0,
+    "max_buffer_s": 60.0,
+    "drain_quantum_s": 0.5,
+    "payload_fraction": 0.95,
+    "link_rtt_s": 0.08,
+    "quality_weight": 1.0,
+    "rebuffer_penalty": 4.3,
+    "smoothness_penalty": 1.0,
+    "initial_bitrate_index": 1
+  },
+  "fixed_bitrate_kbps": 1200,
+  "buffer_reservoir_s": 10.0,
+  "buffer_cushion_s": 40.0,
+  "splits": {
+    "train": {
+      "traces": 166,
+      "captures": 166,
+      "fcc_traces": 39
+    },
+    "validation": {
+      "traces": 130,
+      "captures": 19,
+      "fcc_traces": 44
+    },
+    "test": {
+      "traces": 132,
+      "captures": 20,
+      "fcc_traces": 44
+    }
+  },
+  "split_sha256": {
+    "train.txt": "750d3c393cf0d501774c3df08b4c36c0a952754b6584520201cc54444590d8d2",
+    "validation.txt": "bbb60a2a59af0b5cc51747a944ce86083e49df7542b5cd77b277416a749d3056",
+    "test.txt": "7ae3d426354136a4a052a7aafc1da6ced823d8d665e35b01043075c3a7e390a8",
+    "capture_audit.json": "6027492e20538b8f7b9c5bf7cb0ffe5b8c0ba85b0f01c60bf52c4a56a905822c"
+  },
+  "test_capture_overlap_with_historical_prototype": {
+    "train": {
+      "captures": 16,
+      "traces": 104
+    },
+    "validation": {
+      "captures": 1,
+      "traces": 6
+    },
+    "test": {
+      "captures": 2,
+      "traces": 12
+    }
+  }
+}

@@ -1,5 +1,7 @@
 # Q-learning prototype
 
+[Shared simulator experiment and results](ALIGNED_EXPERIMENT.md)
+
 This directory records an exploratory run of tabular Q-learning with MERINA's
 deterministic player. It includes the code, selected Q-table, trace manifests,
 and paired test metrics from the original run. The shared simulator and baseline

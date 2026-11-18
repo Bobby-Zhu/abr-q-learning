@@ -14,9 +14,11 @@ metadata from the authors' repositories.
 The simulator accepts a bitrate index for each chunk and returns download
 delay, buffer level, rebuffering, measured throughput, QoE reward, and episode
 status. Fixed-bitrate and linear buffer-based baselines are implemented along
-with deterministic train/validation/test manifests. Q-learning integration into the
-shared simulator is the next stage. The [Q-learning prototype](prototype/README.md)
-documents a completed exploratory run and how to reproduce it.
+with capture-disjoint train/validation/test manifests. Tabular Q-learning now
+uses the same simulator and evaluation as both baselines. See the
+[shared simulator experiment](prototype/ALIGNED_EXPERIMENT.md) for results and
+reproduction commands, and the [original prototype](prototype/README.md) for
+the earlier exploratory run.
 
 See [docs/SIMULATOR.md](docs/SIMULATOR.md) for the simulation rules and the
 configuration inherited from MERINA.

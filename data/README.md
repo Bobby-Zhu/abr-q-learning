@@ -11,8 +11,9 @@ whitespace. Do not modify the imported files in place. Any future split
 manifests or processed data should be stored separately so provenance remains
 clear.
 
-The committed manifests in `splits/` now define the 166/131/131
-train/validation/test partition without moving or changing imported files.
+The [committed manifests](splits/README.md) define a capture-disjoint
+166/130/132 train/validation/test partition. Imported files remain in their
+original locations.
 
 Sources, exact commits, and licenses are listed in
 [`../THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md).

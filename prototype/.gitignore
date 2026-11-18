@@ -1,3 +1,4 @@
 /upstream/
 /results/*
 !/results/run_01/
+!/results/run_aligned/

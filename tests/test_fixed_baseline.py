@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import unittest
+import json
 
 from abr_simulator import (
     ABREnvironment,
@@ -76,19 +77,6 @@ class FixedBitratePolicyTests(unittest.TestCase):
 
 
 class DataSplitTests(unittest.TestCase):
-    def test_split_sizes_and_source_balance(self) -> None:
-        train = read_entries("train")
-        validation = read_entries("validation")
-        test = read_entries("test")
-
-        self.assertEqual(len(train), 166)
-        self.assertEqual(len(validation), 131)
-        self.assertEqual(len(test), 131)
-        for entries in (validation, test):
-            fcc_count = sum(Path(entry).name.startswith("trace_") for entry in entries)
-            self.assertEqual(fcc_count, 44)
-            self.assertEqual(len(entries) - fcc_count, 87)
-
     def test_splits_are_disjoint_and_cover_imported_data(self) -> None:
         train = set(read_entries("train"))
         validation = set(read_entries("validation"))
@@ -99,30 +87,32 @@ class DataSplitTests(unittest.TestCase):
         self.assertTrue(validation.isdisjoint(test))
 
         imported_train = {
-            str(path.relative_to(DATA_ROOT))
+            path.relative_to(DATA_ROOT).as_posix()
             for path in (DATA_ROOT / "traces/fcc_hsdpa/train").iterdir()
             if path.is_file()
         }
         imported_holdout = {
-            str(path.relative_to(DATA_ROOT))
+            path.relative_to(DATA_ROOT).as_posix()
             for path in (DATA_ROOT / "traces/fcc_hsdpa/holdout").iterdir()
             if path.is_file()
         }
-        self.assertEqual(train, imported_train)
-        self.assertEqual(validation | test, imported_holdout)
+        audit = json.loads((SPLIT_ROOT / "capture_audit.json").read_text(encoding="utf-8"))
+        excluded = {row["path"] for row in audit["files"] if row["duplicate_of"] is not None}
+        self.assertEqual(train | validation | test | excluded, imported_train | imported_holdout)
+        moved = {row["path"] for row in audit["files"]
+                 if row["split"] == "train" and row["upstream_split"] == "holdout"}
+        self.assertEqual(train, (imported_train | moved) - excluded)
+        self.assertEqual(validation | test, imported_holdout - moved - excluded)
 
     def test_manifest_loader_reads_declared_splits(self) -> None:
-        for split_name, expected_count in (
-            ("train", 166),
-            ("validation", 131),
-            ("test", 131),
-        ):
+        audit = json.loads((SPLIT_ROOT / "capture_audit.json").read_text(encoding="utf-8"))
+        for split_name, counts in audit["splits"].items():
             with self.subTest(split=split_name):
                 traces = load_trace_manifest(
                     SPLIT_ROOT / f"{split_name}.txt",
                     DATA_ROOT,
                 )
-                self.assertEqual(len(traces), expected_count)
+                self.assertEqual(len(traces), counts["traces"])
 
 
 if __name__ == "__main__":
