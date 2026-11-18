@@ -1,0 +1,4 @@
+source,files,excluded,train,validation,test
+non-FCC in fcc_ori,329,329,0,0,0
+FCC,196,137,41,9,9
+HSDPA,144,0,102,24,18

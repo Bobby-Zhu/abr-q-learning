@@ -1,0 +1,11 @@
+{
+  "fixed_mbps": 0.3,
+  "epochs": 12,
+  "seed": 42,
+  "commits": {
+    "merina": "dfd01b7f664e3a9fa0d123945081f7af2ebb31f7",
+    "traces": "d28c4fd48d0e358db024cc0217b111c070815fa7"
+  },
+  "chunks": 49,
+  "causality_check": "passed for all 3 policies"
+}
