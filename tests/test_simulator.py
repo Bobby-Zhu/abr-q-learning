@@ -127,5 +127,22 @@ class ImportedDataTests(unittest.TestCase):
         self.assertTrue(all(result.buffer_s >= 0 for result in results))
 
 
+    def test_download_ending_on_interval_boundary_does_not_stall(self) -> None:
+        # Regression: with this trace, start, and action sequence a download's
+        # fractional time rounds exactly onto a trace timestamp, which used to
+        # leave a zero-length interval and raise "trace interval did not
+        # advance" on the next chunk.
+        trace = load_trace(
+            PROJECT_ROOT / "data/traces/fcc_hsdpa/train/trace_942598_http---www.youtube.com"
+        )
+        video = load_video_metadata(PROJECT_ROOT / "data/video_sizes/mao")
+        environment = ABREnvironment(trace, video)
+        environment.reset(start_index=4)
+
+        for action in (5, 1, 0, 3, 1, 0, 0, 1, 0):
+            result = environment.step(action)
+
+        self.assertGreater(result.download_time_s, 0)
+
 if __name__ == "__main__":
     unittest.main()

@@ -180,6 +180,11 @@ class ABREnvironment:
                 )
                 elapsed_s += fractional_s
                 self._last_trace_time_s += fractional_s
+                # Floating-point rounding can land exactly on the interval
+                # boundary; move to the next interval instead of leaving a
+                # zero-length one behind.
+                if self._last_trace_time_s >= self.trace.times_s[self._trace_index]:
+                    self._advance_trace_interval()
                 sent_bytes = float(byte_count)
             else:
                 sent_bytes += deliverable_bytes
@@ -194,6 +199,8 @@ class ABREnvironment:
             interval_s = self._current_interval_s()
             if interval_s > remaining_s:
                 self._last_trace_time_s += remaining_s
+                if self._last_trace_time_s >= self.trace.times_s[self._trace_index]:
+                    self._advance_trace_interval()
                 return
             remaining_s -= interval_s
             self._advance_trace_interval()

@@ -9,7 +9,14 @@ from .evaluation import (
     aggregate_metrics,
     run_episode,
 )
-from .policies import BufferBasedPolicy, FixedBitratePolicy
+from .policies import (
+    BufferBasedPolicy,
+    FixedBitratePolicy,
+    QLearningAgent,
+    QLearningHyperparameters,
+    StateDiscretizer,
+    train_agent,
+)
 from .qoe import linear_qoe_reward
 from .trace import NetworkTrace, load_trace, load_traces
 from .video import VideoMetadata, load_video_metadata
@@ -21,7 +28,10 @@ __all__ = [
     "EpisodeMetrics",
     "FixedBitratePolicy",
     "NetworkTrace",
+    "QLearningAgent",
+    "QLearningHyperparameters",
     "SimulatorConfig",
+    "StateDiscretizer",
     "StepResult",
     "VideoMetadata",
     "aggregate_metrics",
@@ -31,4 +41,5 @@ __all__ = [
     "load_traces",
     "load_video_metadata",
     "run_episode",
+    "train_agent",
 ]

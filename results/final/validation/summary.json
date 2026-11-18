@@ -1,0 +1,270 @@
+{
+  "split": "validation",
+  "hyperparameters": {
+    "learning_rate": 0.02,
+    "discount": 0.5,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.01,
+    "epsilon_decay_fraction": 0.8,
+    "episodes": 30000,
+    "throughput_history": 3,
+    "throughput_edges_mbps": [
+      0.4,
+      0.7,
+      1.0,
+      1.4,
+      1.9,
+      2.6,
+      3.5
+    ],
+    "buffer_edges_s": [
+      2.0,
+      4.0,
+      7.0,
+      10.0,
+      14.0,
+      19.0,
+      26.0,
+      35.0
+    ]
+  },
+  "seeds": [
+    100,
+    101,
+    102,
+    103,
+    104
+  ],
+  "summaries": {
+    "fixed": [
+      {
+        "all": {
+          "episode_count": 129,
+          "chunk_count": 6321,
+          "mean_episode_qoe": -230.6839661150736,
+          "mean_chunk_qoe": -4.707836043164767,
+          "average_bitrate_kbps": 1200.0,
+          "mean_rebuffer_s_per_episode": 67.21720142211014,
+          "mean_switches_per_episode": 1.0,
+          "average_bitrate_change_kbps": 9.183673469387756
+        },
+        "FCC": {
+          "episode_count": 43,
+          "chunk_count": 2107,
+          "mean_episode_qoe": -372.6298688197229,
+          "mean_chunk_qoe": -7.604691200402509,
+          "average_bitrate_kbps": 1200.0,
+          "mean_rebuffer_s_per_episode": 100.227876469703,
+          "mean_switches_per_episode": 1.0,
+          "average_bitrate_change_kbps": 9.183673469387756
+        },
+        "HSDPA": {
+          "episode_count": 86,
+          "chunk_count": 4214,
+          "mean_episode_qoe": -159.71101476274893,
+          "mean_chunk_qoe": -3.2594084645458965,
+          "average_bitrate_kbps": 1200.0,
+          "mean_rebuffer_s_per_episode": 50.71186389831371,
+          "mean_switches_per_episode": 1.0,
+          "average_bitrate_change_kbps": 9.183673469387756
+        }
+      }
+    ],
+    "buffer": [
+      {
+        "all": {
+          "episode_count": 129,
+          "chunk_count": 6321,
+          "mean_episode_qoe": 43.935920736937,
+          "mean_chunk_qoe": 0.8966514436109592,
+          "average_bitrate_kbps": 1216.5559246954597,
+          "mean_rebuffer_s_per_episode": 1.7525982061206558,
+          "mean_switches_per_episode": 13.093023255813954,
+          "average_bitrate_change_kbps": 166.10504666983073
+        },
+        "FCC": {
+          "episode_count": 43,
+          "chunk_count": 2107,
+          "mean_episode_qoe": 33.38223553345149,
+          "mean_chunk_qoe": 0.6812701129275816,
+          "average_bitrate_kbps": 1018.0588514475558,
+          "mean_rebuffer_s_per_episode": 1.8318759981697468,
+          "mean_switches_per_episode": 14.0,
+          "average_bitrate_change_kbps": 176.03227337446606
+        },
+        "HSDPA": {
+          "episode_count": 86,
+          "chunk_count": 4214,
+          "mean_episode_qoe": 49.21276333867975,
+          "mean_chunk_qoe": 1.0043421089526479,
+          "average_bitrate_kbps": 1315.8044613194115,
+          "mean_rebuffer_s_per_episode": 1.7129593100961102,
+          "mean_switches_per_episode": 12.63953488372093,
+          "average_bitrate_change_kbps": 161.14143331751305
+        }
+      }
+    ],
+    "q_learning": [
+      {
+        "all": {
+          "episode_count": 129,
+          "chunk_count": 6321,
+          "mean_episode_qoe": 48.04246559548812,
+          "mean_chunk_qoe": 0.9804584815405739,
+          "average_bitrate_kbps": 1362.8144280968202,
+          "mean_rebuffer_s_per_episode": 2.070798518446065,
+          "mean_switches_per_episode": 11.51937984496124,
+          "average_bitrate_change_kbps": 200.6328112640405
+        },
+        "FCC": {
+          "episode_count": 43,
+          "chunk_count": 2107,
+          "mean_episode_qoe": 39.108979719497995,
+          "mean_chunk_qoe": 0.7981424432550611,
+          "average_bitrate_kbps": 1099.6440436639773,
+          "mean_rebuffer_s_per_episode": 1.8318759981697468,
+          "mean_switches_per_episode": 9.046511627906977,
+          "average_bitrate_change_kbps": 140.7451352634077
+        },
+        "HSDPA": {
+          "episode_count": 86,
+          "chunk_count": 4214,
+          "mean_episode_qoe": 52.50920853348318,
+          "mean_chunk_qoe": 1.0716165006833303,
+          "average_bitrate_kbps": 1494.3996203132415,
+          "mean_rebuffer_s_per_episode": 2.1902597785842244,
+          "mean_switches_per_episode": 12.755813953488373,
+          "average_bitrate_change_kbps": 230.57664926435692
+        }
+      },
+      {
+        "all": {
+          "episode_count": 129,
+          "chunk_count": 6321,
+          "mean_episode_qoe": 49.39755395083277,
+          "mean_chunk_qoe": 1.0081133459353626,
+          "average_bitrate_kbps": 1390.9587090650214,
+          "mean_rebuffer_s_per_episode": 2.2795484772716277,
+          "mean_switches_per_episode": 10.906976744186046,
+          "average_bitrate_change_kbps": 182.8033538996994
+        },
+        "FCC": {
+          "episode_count": 43,
+          "chunk_count": 2107,
+          "mean_episode_qoe": 41.354832766152555,
+          "mean_chunk_qoe": 0.8439761789010726,
+          "average_bitrate_kbps": 1133.3412434741338,
+          "mean_rebuffer_s_per_episode": 1.8769182858595999,
+          "mean_switches_per_episode": 8.930232558139535,
+          "average_bitrate_change_kbps": 124.65590887517797
+        },
+        "HSDPA": {
+          "episode_count": 86,
+          "chunk_count": 4214,
+          "mean_episode_qoe": 53.41891454317288,
+          "mean_chunk_qoe": 1.090181929452508,
+          "average_bitrate_kbps": 1519.7674418604652,
+          "mean_rebuffer_s_per_episode": 2.4808635729776416,
+          "mean_switches_per_episode": 11.895348837209303,
+          "average_bitrate_change_kbps": 211.87707641196013
+        }
+      },
+      {
+        "all": {
+          "episode_count": 129,
+          "chunk_count": 6321,
+          "mean_episode_qoe": 45.64893788007795,
+          "mean_chunk_qoe": 0.931610977144448,
+          "average_bitrate_kbps": 1382.0914412276538,
+          "mean_rebuffer_s_per_episode": 2.2601172047412024,
+          "mean_switches_per_episode": 15.131782945736434,
+          "average_bitrate_change_kbps": 252.1436481569372
+        },
+        "FCC": {
+          "episode_count": 43,
+          "chunk_count": 2107,
+          "mean_episode_qoe": 39.161105141469555,
+          "mean_chunk_qoe": 0.7992062273769297,
+          "average_bitrate_kbps": 1128.6663502610347,
+          "mean_rebuffer_s_per_episode": 1.9030420709400169,
+          "mean_switches_per_episode": 11.279069767441861,
+          "average_bitrate_change_kbps": 162.45847176079735
+        },
+        "HSDPA": {
+          "episode_count": 86,
+          "chunk_count": 4214,
+          "mean_episode_qoe": 48.89285424938215,
+          "mean_chunk_qoe": 0.9978133520282071,
+          "average_bitrate_kbps": 1508.8039867109635,
+          "mean_rebuffer_s_per_episode": 2.4386547716417954,
+          "mean_switches_per_episode": 17.058139534883722,
+          "average_bitrate_change_kbps": 296.9862363550071
+        }
+      },
+      {
+        "all": {
+          "episode_count": 129,
+          "chunk_count": 6321,
+          "mean_episode_qoe": 46.35582688992742,
+          "mean_chunk_qoe": 0.9460372834679066,
+          "average_bitrate_kbps": 1369.7120708748616,
+          "mean_rebuffer_s_per_episode": 2.23237485343314,
+          "mean_switches_per_episode": 11.728682170542635,
+          "average_bitrate_change_kbps": 227.77250435057744
+        },
+        "FCC": {
+          "episode_count": 43,
+          "chunk_count": 2107,
+          "mean_episode_qoe": 38.996884757012786,
+          "mean_chunk_qoe": 0.7958547909594446,
+          "average_bitrate_kbps": 1109.9193165638349,
+          "mean_rebuffer_s_per_episode": 1.8419900240586822,
+          "mean_switches_per_episode": 8.395348837209303,
+          "average_bitrate_change_kbps": 152.4205030849549
+        },
+        "HSDPA": {
+          "episode_count": 86,
+          "chunk_count": 4214,
+          "mean_episode_qoe": 50.035297956384746,
+          "mean_chunk_qoe": 1.0211285297221375,
+          "average_bitrate_kbps": 1499.608448030375,
+          "mean_rebuffer_s_per_episode": 2.4275672681203693,
+          "mean_switches_per_episode": 13.395348837209303,
+          "average_bitrate_change_kbps": 265.4485049833887
+        }
+      },
+      {
+        "all": {
+          "episode_count": 129,
+          "chunk_count": 6321,
+          "mean_episode_qoe": 49.95160165812048,
+          "mean_chunk_qoe": 1.0194204420024588,
+          "average_bitrate_kbps": 1371.6737857933872,
+          "mean_rebuffer_s_per_episode": 2.239486904817844,
+          "mean_switches_per_episode": 11.643410852713178,
+          "average_bitrate_change_kbps": 155.72694193956653
+        },
+        "FCC": {
+          "episode_count": 43,
+          "chunk_count": 2107,
+          "mean_episode_qoe": 40.70571014479444,
+          "mean_chunk_qoe": 0.8307287784651927,
+          "average_bitrate_kbps": 1115.4959658281916,
+          "mean_rebuffer_s_per_episode": 1.864275088014273,
+          "mean_switches_per_episode": 10.209302325581396,
+          "average_bitrate_change_kbps": 121.16753678215473
+        },
+        "HSDPA": {
+          "episode_count": 86,
+          "chunk_count": 4214,
+          "mean_episode_qoe": 54.574547414783495,
+          "mean_chunk_qoe": 1.1137662737710918,
+          "average_bitrate_kbps": 1499.7626957759849,
+          "mean_rebuffer_s_per_episode": 2.42709281321963,
+          "mean_switches_per_episode": 12.36046511627907,
+          "average_bitrate_change_kbps": 173.00664451827242
+        }
+      }
+    ]
+  }
+}

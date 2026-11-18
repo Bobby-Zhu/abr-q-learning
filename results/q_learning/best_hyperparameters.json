@@ -1,0 +1,28 @@
+{
+  "learning_rate": 0.02,
+  "discount": 0.5,
+  "epsilon_start": 1.0,
+  "epsilon_end": 0.01,
+  "epsilon_decay_fraction": 0.8,
+  "episodes": 30000,
+  "throughput_history": 3,
+  "throughput_edges_mbps": [
+    0.4,
+    0.7,
+    1.0,
+    1.4,
+    1.9,
+    2.6,
+    3.5
+  ],
+  "buffer_edges_s": [
+    2.0,
+    4.0,
+    7.0,
+    10.0,
+    14.0,
+    19.0,
+    26.0,
+    35.0
+  ]
+}
