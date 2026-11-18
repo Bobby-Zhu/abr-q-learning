@@ -1,0 +1,88 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='700' height='550' viewBox='0 0 700 550' font-family='system-ui, -apple-system, Segoe UI, sans-serif'>
+<title>Policy comparison on test</title>
+<rect width='700' height='550' fill='#fcfcfb'/>
+<text x='20.0' y='28.0' font-size='16' fill='#0b0b0b' text-anchor='start' font-weight='600'>Policy comparison, test split, all traces</text>
+<rect x='20.0' y='43.0' width='10' height='10' rx='2' fill='#2a78d6'/>
+<text x='35.0' y='52.0' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>Fixed 1200 Kbps</text>
+<rect x='158.0' y='43.0' width='10' height='10' rx='2' fill='#eb6834'/>
+<text x='173.0' y='52.0' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>Buffer-based</text>
+<rect x='274.4' y='43.0' width='10' height='10' rx='2' fill='#1baf7a'/>
+<text x='289.4' y='52.0' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='normal'>Q-learning</text>
+<text x='20.0' y='87.0' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'>Mean QoE per video (higher is better)</text>
+<line x1='70.0' y1='273.0' x2='330.0' y2='273.0' stroke='#e4e3df' stroke-width='1' />
+<text x='64.0' y='277.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>-300</text>
+<line x1='70.0' y1='230.5' x2='330.0' y2='230.5' stroke='#e4e3df' stroke-width='1' />
+<text x='64.0' y='234.5' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>-200</text>
+<line x1='70.0' y1='188.0' x2='330.0' y2='188.0' stroke='#e4e3df' stroke-width='1' />
+<text x='64.0' y='192.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>-100</text>
+<line x1='70.0' y1='145.5' x2='330.0' y2='145.5' stroke='#52514e' stroke-width='1' />
+<text x='64.0' y='149.5' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>0</text>
+<line x1='70.0' y1='103.0' x2='330.0' y2='103.0' stroke='#e4e3df' stroke-width='1' />
+<text x='64.0' y='107.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>100</text>
+<path d='M89.5,145.5 V252.6 Q89.5,256.6 93.5,256.6 H133.2 Q137.2,256.6 137.2,252.6 V145.5 Z' fill='#2a78d6'><title>Fixed 1200 Kbps: -261.37</title></path>
+<text x='113.3' y='270.6' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>-261</text>
+<path d='M176.2,145.5 V133.9 Q176.2,129.9 180.2,129.9 H219.8 Q223.8,129.9 223.8,133.9 V145.5 Z' fill='#eb6834'><title>Buffer-based: 36.78</title></path>
+<text x='200.0' y='123.9' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>36.8</text>
+<path d='M262.8,145.5 V132.7 Q262.8,128.7 266.8,128.7 H306.5 Q310.5,128.7 310.5,132.7 V145.5 Z' fill='#1baf7a'><title>Q-learning: 39.64</title></path>
+<line x1='286.7' y1='129.1' x2='286.7' y2='128.2' stroke='#0b0b0b' stroke-width='1.5' />
+<line x1='281.7' y1='129.1' x2='291.7' y2='129.1' stroke='#0b0b0b' stroke-width='1.5' />
+<line x1='281.7' y1='128.2' x2='291.7' y2='128.2' stroke='#0b0b0b' stroke-width='1.5' />
+<text x='286.7' y='122.2' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>39.6</text>
+<text x='360.0' y='87.0' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'>Average bitrate, Kbps</text>
+<line x1='410.0' y1='273.0' x2='670.0' y2='273.0' stroke='#52514e' stroke-width='1' />
+<text x='404.0' y='277.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>0</text>
+<line x1='410.0' y1='216.3' x2='670.0' y2='216.3' stroke='#e4e3df' stroke-width='1' />
+<text x='404.0' y='220.3' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>500</text>
+<line x1='410.0' y1='159.7' x2='670.0' y2='159.7' stroke='#e4e3df' stroke-width='1' />
+<text x='404.0' y='163.7' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>1,000</text>
+<line x1='410.0' y1='103.0' x2='670.0' y2='103.0' stroke='#e4e3df' stroke-width='1' />
+<text x='404.0' y='107.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>1,500</text>
+<path d='M429.5,273.0 V141.0 Q429.5,137.0 433.5,137.0 H473.2 Q477.2,137.0 477.2,141.0 V273.0 Z' fill='#2a78d6'><title>Fixed 1200 Kbps: 1200.00</title></path>
+<text x='453.3' y='131.0' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>1,200</text>
+<path d='M516.2,273.0 V155.9 Q516.2,151.9 520.2,151.9 H559.8 Q563.8,151.9 563.8,155.9 V273.0 Z' fill='#eb6834'><title>Buffer-based: 1068.72</title></path>
+<text x='540.0' y='145.9' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>1,069</text>
+<path d='M602.8,273.0 V143.7 Q602.8,139.7 606.8,139.7 H646.5 Q650.5,139.7 650.5,143.7 V273.0 Z' fill='#1baf7a'><title>Q-learning: 1175.93</title></path>
+<line x1='626.7' y1='140.5' x2='626.7' y2='139.0' stroke='#0b0b0b' stroke-width='1.5' />
+<line x1='621.7' y1='140.5' x2='631.7' y2='140.5' stroke='#0b0b0b' stroke-width='1.5' />
+<line x1='621.7' y1='139.0' x2='631.7' y2='139.0' stroke='#0b0b0b' stroke-width='1.5' />
+<text x='626.7' y='133.0' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>1,176</text>
+<text x='20.0' y='327.0' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'>Rebuffering per video, s (lower is better)</text>
+<line x1='70.0' y1='513.0' x2='330.0' y2='513.0' stroke='#52514e' stroke-width='1' />
+<text x='64.0' y='517.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>0</text>
+<line x1='70.0' y1='470.5' x2='330.0' y2='470.5' stroke='#e4e3df' stroke-width='1' />
+<text x='64.0' y='474.5' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>20</text>
+<line x1='70.0' y1='428.0' x2='330.0' y2='428.0' stroke='#e4e3df' stroke-width='1' />
+<text x='64.0' y='432.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>40</text>
+<line x1='70.0' y1='385.5' x2='330.0' y2='385.5' stroke='#e4e3df' stroke-width='1' />
+<text x='64.0' y='389.5' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>60</text>
+<line x1='70.0' y1='343.0' x2='330.0' y2='343.0' stroke='#e4e3df' stroke-width='1' />
+<text x='64.0' y='347.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>80</text>
+<path d='M89.5,513.0 V359.0 Q89.5,355.0 93.5,355.0 H133.2 Q137.2,355.0 137.2,359.0 V513.0 Z' fill='#2a78d6'><title>Fixed 1200 Kbps: 74.35</title></path>
+<text x='113.3' y='349.0' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>74.4</text>
+<path d='M176.2,513.0 V513.0 Q176.2,509.5 179.7,509.5 H220.3 Q223.8,509.5 223.8,513.0 V513.0 Z' fill='#eb6834'><title>Buffer-based: 1.66</title></path>
+<text x='200.0' y='503.5' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>1.7</text>
+<path d='M262.8,513.0 V512.8 Q262.8,508.8 266.8,508.8 H306.5 Q310.5,508.8 310.5,512.8 V513.0 Z' fill='#1baf7a'><title>Q-learning: 1.97</title></path>
+<line x1='286.7' y1='509.0' x2='286.7' y2='508.6' stroke='#0b0b0b' stroke-width='1.5' />
+<line x1='281.7' y1='509.0' x2='291.7' y2='509.0' stroke='#0b0b0b' stroke-width='1.5' />
+<line x1='281.7' y1='508.6' x2='291.7' y2='508.6' stroke='#0b0b0b' stroke-width='1.5' />
+<text x='286.7' y='502.6' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>2.0</text>
+<text x='360.0' y='327.0' font-size='12' fill='#0b0b0b' text-anchor='start' font-weight='600'>Bitrate switches per video (lower is better)</text>
+<line x1='410.0' y1='513.0' x2='670.0' y2='513.0' stroke='#52514e' stroke-width='1' />
+<text x='404.0' y='517.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>0</text>
+<line x1='410.0' y1='456.3' x2='670.0' y2='456.3' stroke='#e4e3df' stroke-width='1' />
+<text x='404.0' y='460.3' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>5</text>
+<line x1='410.0' y1='399.7' x2='670.0' y2='399.7' stroke='#e4e3df' stroke-width='1' />
+<text x='404.0' y='403.7' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>10</text>
+<line x1='410.0' y1='343.0' x2='670.0' y2='343.0' stroke='#e4e3df' stroke-width='1' />
+<text x='404.0' y='347.0' font-size='10' fill='#52514e' text-anchor='end' font-weight='normal'>15</text>
+<path d='M429.5,513.0 V505.7 Q429.5,501.7 433.5,501.7 H473.2 Q477.2,501.7 477.2,505.7 V513.0 Z' fill='#2a78d6'><title>Fixed 1200 Kbps: 1.00</title></path>
+<text x='453.3' y='495.7' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>1</text>
+<path d='M516.2,513.0 V352.9 Q516.2,348.9 520.2,348.9 H559.8 Q563.8,348.9 563.8,352.9 V513.0 Z' fill='#eb6834'><title>Buffer-based: 14.48</title></path>
+<text x='540.0' y='342.9' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>14.5</text>
+<path d='M602.8,513.0 V377.2 Q602.8,373.2 606.8,373.2 H646.5 Q650.5,373.2 650.5,377.2 V513.0 Z' fill='#1baf7a'><title>Q-learning: 12.34</title></path>
+<line x1='626.7' y1='395.2' x2='626.7' y2='351.1' stroke='#0b0b0b' stroke-width='1.5' />
+<line x1='621.7' y1='395.2' x2='631.7' y2='395.2' stroke='#0b0b0b' stroke-width='1.5' />
+<line x1='621.7' y1='351.1' x2='631.7' y2='351.1' stroke='#0b0b0b' stroke-width='1.5' />
+<text x='626.7' y='345.1' font-size='11' fill='#0b0b0b' text-anchor='middle' font-weight='normal'>12.3</text>
+<text x='20.0' y='540.0' font-size='11' fill='#52514e' text-anchor='start' font-weight='normal'>Q-learning bars are the mean over trained seeds; whiskers show ±1 standard deviation.</text>
+</svg>

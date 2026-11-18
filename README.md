@@ -14,8 +14,10 @@ metadata from the authors' repositories.
 The simulator accepts a bitrate index for each chunk and returns download
 delay, buffer level, rebuffering, measured throughput, QoE reward, and episode
 status. Fixed-bitrate and linear buffer-based baselines are implemented along
-with deterministic train/validation/test manifests. Q-learning is the
-remaining model stage.
+with deterministic train/validation/test manifests. A tabular Q-learning
+agent is trained on the training split, tuned on validation, and compared
+with both baselines once on the frozen test split; see
+[docs/Q_LEARNING.md](docs/Q_LEARNING.md).
 
 See [docs/SIMULATOR.md](docs/SIMULATOR.md) for the simulation rules and the
 configuration inherited from MERINA.
@@ -52,6 +54,22 @@ python3 scripts/run_buffer_baseline.py --limit 1 --per-trace
 See [docs/BASELINES.md](docs/BASELINES.md) for the policy definition and metric
 semantics.
 
+## Train, tune, and evaluate Q-learning
+
+No third-party packages are needed for any step.
+
+```bash
+# Train one agent on the training split and score it on validation
+python3 scripts/train_q_learning.py --episodes 30000 --seed 0
+
+# Hyperparameter search on validation only (round 2, about 20 minutes on 4 cores)
+python3 scripts/tune_q_learning.py
+
+# Frozen final comparison on test, then the report figures
+python3 scripts/evaluate_final.py --split test
+python3 scripts/make_figures.py --split test
+```
+
 ## Run the Stage 1 smoke test
 
 No third-party Python packages are required.
@@ -82,9 +100,15 @@ data/splits/                   Deterministic train/validation/test manifests
 scripts/smoke_simulator.py     Full-video fixed-bitrate smoke run
 scripts/run_fixed_baseline.py   Fixed-baseline evaluation
 scripts/run_buffer_baseline.py  Buffer-baseline evaluation
+scripts/train_q_learning.py    Train one Q-learning agent
+scripts/tune_q_learning.py     Validation-only hyperparameter search
+scripts/evaluate_final.py      Frozen test comparison of all policies
+scripts/make_figures.py        SVG report figures from the final results
+results/                       Tuning table, chosen settings, final results
 tests/                         Simulator, policy, and metrics checks
 docs/SIMULATOR.md              Simulator contract and design notes
 docs/BASELINES.md              Baseline rules and evaluation metrics
+docs/Q_LEARNING.md             Q-learning design, tuning, and results
 third_party/licenses/          Required upstream MIT licenses
 ```
 
