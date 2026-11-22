@@ -56,7 +56,7 @@ semantics.
 
 ## Train, tune, and evaluate Q-learning
 
-No third-party packages are needed for any step.
+Training, tuning, and final evaluation use only the Python standard library.
 
 ```bash
 # Train one agent on the training split and score it on validation
@@ -69,6 +69,21 @@ python3 scripts/tune_q_learning.py
 python3 scripts/evaluate_final.py --split test
 python3 scripts/make_figures.py --split test
 ```
+
+## Analyze trace dynamics
+
+Calculate sampling rates, variability, lag-one correlations, and causal
+forecast errors separately for FCC/HSDPA in each frozen split:
+
+```bash
+python3 scripts/analyze_trace_dynamics.py
+```
+
+Tables, input fingerprints, and a generated summary are saved under
+`results/trace_dynamics/`. The analysis also relates these statistics to the
+existing saved QoE differences. See [docs/TRACE_DYNAMICS.md](docs/TRACE_DYNAMICS.md)
+for definitions, findings, limitations, and the optional Matplotlib commands
+that generate report figures. No policy is trained or reevaluated by this step.
 
 ## Run the Stage 1 smoke test
 
@@ -104,11 +119,14 @@ scripts/train_q_learning.py    Train one Q-learning agent
 scripts/tune_q_learning.py     Validation-only hyperparameter search
 scripts/evaluate_final.py      Frozen test comparison of all policies
 scripts/make_figures.py        SVG report figures from the final results
+scripts/analyze_trace_dynamics.py  Sampling, variation, and forecast statistics
+scripts/plot_trace_dynamics.py  Matplotlib figures from the saved analysis
 results/                       Tuning table, chosen settings, final results
 tests/                         Simulator, policy, and metrics checks
 docs/SIMULATOR.md              Simulator contract and design notes
 docs/BASELINES.md              Baseline rules and evaluation metrics
 docs/Q_LEARNING.md             Q-learning design, tuning, and results
+docs/TRACE_DYNAMICS.md         Trace statistics, reproducibility, and interpretation
 third_party/licenses/          Required upstream MIT licenses
 ```
 

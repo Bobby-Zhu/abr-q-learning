@@ -1,0 +1,2 @@
+# Optional plotting dependency; training and numerical analysis use the stdlib.
+matplotlib>=3.10,<4

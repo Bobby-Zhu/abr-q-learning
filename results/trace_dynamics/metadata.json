@@ -1,0 +1,57 @@
+{
+  "analysis_version": 1,
+  "window_s": 5.0,
+  "predictor_history_windows": [
+    1,
+    3
+  ],
+  "common_forecast_warmup_windows": 3,
+  "minimum_correlation_pairs": 3,
+  "partial_windows": "discarded",
+  "trace_wrap": false,
+  "aggregation": "equal trace; also equal recording after averaging its slice metrics",
+  "purpose": "descriptive analysis after frozen evaluation; no model changes",
+  "inputs": [
+    {
+      "split": "train",
+      "trace_count": 166,
+      "manifest_sha256": "750d3c393cf0d501774c3df08b4c36c0a952754b6584520201cc54444590d8d2",
+      "trace_paths_and_bytes_sha256": "f0ded42f30f3ab1220bccfd0e175d85e1b5f9e132427de747fe920280aec6bff",
+      "saved_qoe": null
+    },
+    {
+      "split": "validation",
+      "trace_count": 129,
+      "manifest_sha256": "73d14b5f8c4f539b5f2b77298e534ab7a6fcd114656339707a88c4f8ead457ab",
+      "trace_paths_and_bytes_sha256": "bbef71519878a98e82672f7ee7fc3b54036df5003accffc12d5c82d6b5951546",
+      "saved_qoe": {
+        "file": "results/final/validation/per_trace.csv",
+        "sha256": "d4fbbf0386264425780d5bcfd8dfd0279bce1b766da31a0d418fe89fddc2287e",
+        "seeds": [
+          100,
+          101,
+          102,
+          103,
+          104
+        ]
+      }
+    },
+    {
+      "split": "test",
+      "trace_count": 133,
+      "manifest_sha256": "ab4107ec772e6aa96effb515b2132edcec5aa8d8063edec5afb908ccf18af695",
+      "trace_paths_and_bytes_sha256": "7f271ca788e0e5968a57d880fff7ef065a93213d20bcca79365231396533484a",
+      "saved_qoe": {
+        "file": "results/final/test/per_trace.csv",
+        "sha256": "1984bf1646d066f56776c9835a4b1fa0ca63834934aa04a349af5c39a3dc1d7b",
+        "seeds": [
+          100,
+          101,
+          102,
+          103,
+          104
+        ]
+      }
+    }
+  ]
+}

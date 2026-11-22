@@ -156,9 +156,12 @@ split the buffer-based baseline scores 20.5 and a greedy Q-learning agent
   throughput, it can raise the bitrate before the buffer fills. The
   buffer-based policy has to wait for the buffer to reach its thresholds.
 - **The gain comes mostly from FCC traces** (+6.2, higher on 40 of 45).
-  On HSDPA mobile traces the two policies are statistically tied. Those
-  traces fluctuate quickly, so last-chunk throughput predicts the next
-  chunk less well.
+  On HSDPA mobile traces the reported confidence interval includes zero,
+  so it does not establish a QoE advantage there. The follow-up
+  [trace-dynamics analysis](TRACE_DYNAMICS.md) finds somewhat higher relative
+  forecast error on HSDPA at a common 5-second timescale, but also higher
+  autocorrelation. That provides partial evidence for a difference in
+  information quality; it does not prove why the source-wise gains differ.
 - **The fixed 1200 Kbit/s baseline fails badly** on these splits because
   many traces cannot sustain 1.2 Mbit/s, which causes more than a minute of
   stalling per video.
