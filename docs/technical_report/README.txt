@@ -1,19 +1,14 @@
-Adaptive Video Bitrate Selection under Varying Network Conditions
+Reproducing the integrated ABR report
 
-main.tex is the technical report based on Bobby-Zhu/abr-q-learning commit
-007a5c18f7875911a9ea778a4bcb3bd0686f627c. The report uses the project's
-archived policies, manifests, and evaluation results.
+The team report is in ../final_report_redline/ABR-Report.pdf. To rebuild it,
+run "tectonic main.tex" in ../final_report_redline/, where the source and the
+images/ directory are located.
 
-To edit in Overleaf, upload main.tex and the images/ directory together.
-To build locally, run "tectonic main.tex" from this directory, or run
-"pdflatex main.tex" twice. The compiled report is also included.
+Run the following commands with Python 3.10 or later from the repository root:
 
-To reproduce the additional analysis, use Python 3.10 or later and point
---repo at a checkout of the commit above. Run from this directory:
-
-  python replay_case.py --repo /path/to/abr-q-learning
-  python check_splits.py --repo /path/to/abr-q-learning
-  python recording_intervals.py --repo /path/to/abr-q-learning
+  python docs/technical_report/replay_case.py --repo .
+  python docs/technical_report/check_splits.py --repo .
+  python docs/technical_report/recording_intervals.py --repo .
 
 replay_case.py prints the two selected downloads for each policy and checks
 all full-episode metrics against the committed results. Costs in the body
