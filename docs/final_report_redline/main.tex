@@ -50,6 +50,20 @@ shared across splits. The test files represent only 20 recordings, including
 six FCC and 14 HSDPA recordings~\cite{splits}. This matters because adjacent
 slices from the same recording can share network conditions.
 
+\begin{reviewedit}
+We also checked the 166 training files against all 131 original validation
+files and then against all 129 revised validation files. In both versions
+we found zero shared filename-derived recording IDs, zero identical full
+bandwidth sequences, and zero exact matches of a 16-sample bandwidth window
+containing at least two distinct values. Comparing the bandwidth values at
+any offset allows timestamps to differ. Resampled copies could escape these
+checks. In the original validation--test split, 119 of 131 test slices had
+a sibling from the same recording in validation. In the revised split this
+count was zero of 133. The audit describes the main experiment's partitions.
+Of its 20 test recording IDs, 14 appeared in training and two in validation
+in an earlier exploratory prototype with a separate partition~\cite{prototype}.
+\end{reviewedit}
+
 \section{Modeling and Inference}
 
 \paragraph{Environment and reward.}
@@ -115,8 +129,13 @@ Q-learning & \(39.64\pm1.10\) & \(1176\pm7\) & \(1.97\pm0.11\) & \(12.34\pm1.95\
 Q-learning improved average test QoE by 2.86 points over the buffer-based
 baseline. \reviewtext{Giving each original recording equal weight produced a similar
 gain of 2.76 points.} The table reports variation across training seeds.
-Dependence among slices limits the interpretation of uncertainty based on
-resampling individual files. The fixed-rate policy incurred over a minute of
+\reviewtext{To estimate uncertainty across recordings, we first averaged
+the five agents' QoE on each slice and subtracted the buffer baseline on that
+slice. We resampled the 20 original recordings with replacement 10,000 times
+and averaged the slice differences in each draw, keeping sibling slices
+together. The 95\% percentile interval for the 2.86-point gain was
+\([0.20, 5.98]\) QoE points per video.}
+The fixed-rate policy incurred over a minute of
 stall time per video on average, consistent with its inability to lower the
 rate when the connection cannot sustain 1200 kbps~\cite{testresults}.
 
@@ -152,8 +171,10 @@ The gain from selecting higher rates appeared in both networks
 (Table~\ref{tab:decomposition}). The difference was how much each policy paid
 for that gain. On FCC, the rebuffer cost was small and the switching term
 favored Q-learning. On HSDPA, rebuffering and switching costs absorbed most
-of the higher-bitrate reward. The reported per-slice interval for HSDPA spans
-zero, so the positive mean there remains uncertain~\cite{implementation}.
+of the higher-bitrate reward. Resampling whole recordings within each source
+gave a 95\% interval of \([-1.30, 4.26]\) for HSDPA and \([1.46, 12.02]\)
+for FCC. The HSDPA mean remains uncertain, and the FCC estimate rests on
+six recordings.
 
 \subsection{Two Outcomes Within the Same HSDPA Recording}
 
@@ -182,10 +203,34 @@ Slice & Bitrate (kbps) & Rebuffering (s) & QoE difference \\
 On \texttt{part0}, Q-learning selected higher rates without extending the
 stall time. On \texttt{part2}, its bitrate reward increased by 7.00 points,
 but the extra 10.34 seconds of stalling cost 44.44 points before the
-additional switching penalty. The per-video metrics identify the cost that
-drove the loss. A chunk-level replay could show whether the risky requests
-occurred when the buffer was low or when the throughput estimate lagged a
-drop in available bandwidth.
+additional switching penalty.
+
+We replayed the first archived agent (seed 100) from the beginning of
+\texttt{part2}. It stalled twice after startup (Table~\ref{tab:replay}).
+At chunk 10 it chose a bitrate below the harmonic mean of the three previous
+downloads, yet the new download delivered just 0.31 Mbit/s. At chunk 39
+the agent chose 2.85 Mbit/s with 17.72 seconds buffered. The download took
+26.52 seconds, exhausting even this larger reserve. The buffer baseline
+incurred only the 0.53-second startup wait on its own replay. Earlier
+choices affect request timing, so the two policies can encounter different
+parts of the trace when they download the same video chunk.
+
+\begin{table}[htbp]
+\reviewcolor
+\centering\small
+\caption{Both post-startup stalls for seed 100 on \texttt{norway\_car\_1\_part2}.
+The estimate uses completed downloads before the request. Rates are in Mbit/s
+and times in seconds. Chunk numbers start at 1.}
+\label{tab:replay}
+\begin{tabular}{rrrrrrr}
+\toprule
+Chunk & Prior estimate & Chosen rate & Measured rate & Buffer before & Download & Stall \\
+\midrule
+10 & 1.28 & 1.20 & 0.31 & 8.76 & 14.41 & 5.66 \\
+39 & 2.11 & 2.85 & 0.43 & 17.72 & 26.52 & 8.80 \\
+\bottomrule
+\end{tabular}
+\end{table}
 \end{reviewedit}
 
 \subsection{Does Throughput Predictability Explain the Source Difference?}
@@ -206,8 +251,8 @@ persisted when averaging within each of the 20 original recordings
 gain. In addition, fixed-time link bandwidth differs from the actual chunk
 throughput measured by the agent. The results are consistent with a benefit
 from more informative throughput observations. Establishing the mechanism
-would require controlling for bandwidth and examining the policy's decisions
-around stalls~\cite{dynamics}.
+would require controlling for bandwidth and comparing decision-level
+replays across more recordings~\cite{dynamics}.
 
 \begin{figure}[htbp]
 \centering
@@ -251,9 +296,10 @@ the two baseline policies. The gain came mainly from selecting higher
 bitrates and was clearest on FCC. The HSDPA examples show how quickly stalls
 can outweigh an apparent gain in picture quality. The evaluation used one
 video, a small number of source recordings, and untuned baseline defaults.
-A follow-up could replay the failure cases to identify the buffer and
-throughput conditions before a stall, then test a conservative bitrate cap
-under low buffer on validation. A validation-tuned buffer rule and multiple
+\reviewtext{The chunk 39 replay suggests a follow-up on validation: test
+whether discounting the throughput estimate after sharp fluctuations
+reduces stall costs enough to offset any loss in bitrate reward, including
+when the buffer exceeds ten seconds.} A validation-tuned buffer rule and multiple
 videos would provide stronger comparisons.
 
 \section{Reflections \& Contributions}
@@ -282,6 +328,11 @@ The selected throughput bin edges in Mbit/s are 0.4, 0.7, 1.0, 1.4, 1.9,
 35. Observations on an edge are assigned to the upper bin. The team
 repository records the manifests, selected configuration, test outputs, and
 analysis scripts at commit \texttt{2169df2}.
+\reviewtext{The accompanying scripts in \texttt{docs/technical\_report/}
+reproduce the split audit (\texttt{check\_splits.py}), the chunk replay
+(\texttt{replay\_case.py}), and the paired bootstrap intervals
+(\texttt{recording\_intervals.py}). Each accepts \texttt{--repo} followed
+by the path to the repository.}
 
 \begin{thebibliography}{9}
 \bibitem{traces}
@@ -315,5 +366,8 @@ Project team. \emph{Frozen test comparison}.
 \bibitem{dynamics}
 Project team. \emph{Trace dynamics analysis}.
 \href{https://github.com/Bobby-Zhu/abr-q-learning/blob/2169df2/docs/TRACE_DYNAMICS.md}{Methods, figures, and interpretation}.
+\bibitem{prototype}
+Project team. \emph{Earlier exploratory prototype}.
+\href{https://github.com/Bobby-Zhu/abr-q-learning/blob/1c8251acc07a97f89b18e78ff958b8d3b061339e/prototype/results/run_01/manifest.csv}{Run manifest}.
 \end{thebibliography}
 \end{document}
