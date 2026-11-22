@@ -1,0 +1,124 @@
+{
+  "repo": "Bobby-Zhu/abr-q-learning",
+  "commit": "2169df2a05060b49bf8ef347cd65054b5dac78fe",
+  "run_mode": "validation",
+  "params": {
+    "learning_rate": 0.02,
+    "discount": 0.5,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.01,
+    "epsilon_decay_fraction": 0.8,
+    "episodes": 10000,
+    "throughput_history": 3,
+    "throughput_edges_mbps": [
+      0.4,
+      0.7,
+      1.0,
+      1.4,
+      1.9,
+      2.6,
+      3.5
+    ],
+    "buffer_edges_s": [
+      2.0,
+      4.0,
+      7.0,
+      10.0,
+      14.0,
+      19.0,
+      26.0,
+      35.0
+    ]
+  },
+  "data": [
+    {
+      "split": "train",
+      "trace_count": 166,
+      "manifest_sha256": "750d3c393cf0d501774c3df08b4c36c0a952754b6584520201cc54444590d8d2"
+    },
+    {
+      "split": "validation",
+      "trace_count": 129,
+      "manifest_sha256": "73d14b5f8c4f539b5f2b77298e534ab7a6fcd114656339707a88c4f8ead457ab"
+    }
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "per_seed": [
+    {
+      "seed": 0,
+      "episode_count": 129,
+      "chunk_count": 6321,
+      "mean_episode_qoe": 44.0756669495361,
+      "mean_chunk_qoe": 0.8995034071333897,
+      "average_bitrate_kbps": 1394.0673943996203,
+      "mean_rebuffer_s_per_episode": 2.5625364404359905,
+      "mean_switches_per_episode": 15.286821705426357,
+      "average_bitrate_change_kbps": 269.68834045246007,
+      "visited_state_fraction": 0.6316872427983539
+    },
+    {
+      "seed": 1,
+      "episode_count": 129,
+      "chunk_count": 6321,
+      "mean_episode_qoe": 46.24062137984453,
+      "mean_chunk_qoe": 0.943686150609072,
+      "average_bitrate_kbps": 1410.575858250277,
+      "mean_rebuffer_s_per_episode": 2.6062012655490463,
+      "mean_switches_per_episode": 15.10077519379845,
+      "average_bitrate_change_kbps": 238.18224964404365,
+      "visited_state_fraction": 0.6337448559670782
+    },
+    {
+      "seed": 2,
+      "episode_count": 129,
+      "chunk_count": 6321,
+      "mean_episode_qoe": 43.816559661704176,
+      "mean_chunk_qoe": 0.8942155033000853,
+      "average_bitrate_kbps": 1389.4953330169276,
+      "mean_rebuffer_s_per_episode": 2.4772197649903744,
+      "mean_switches_per_episode": 18.217054263565892,
+      "average_bitrate_change_kbps": 277.89115646258506,
+      "visited_state_fraction": 0.6337448559670782
+    },
+    {
+      "seed": 3,
+      "episode_count": 129,
+      "chunk_count": 6321,
+      "mean_episode_qoe": 45.22044999570365,
+      "mean_chunk_qoe": 0.9228663264429317,
+      "average_bitrate_kbps": 1393.062806517956,
+      "mean_rebuffer_s_per_episode": 2.686699027499962,
+      "mean_switches_per_episode": 14.116279069767442,
+      "average_bitrate_change_kbps": 234.42493276380318,
+      "visited_state_fraction": 0.6481481481481481
+    },
+    {
+      "seed": 4,
+      "episode_count": 129,
+      "chunk_count": 6321,
+      "mean_episode_qoe": 42.80933587860401,
+      "mean_chunk_qoe": 0.8736599158898777,
+      "average_bitrate_kbps": 1360.4018351526656,
+      "mean_rebuffer_s_per_episode": 2.510448299369179,
+      "mean_switches_per_episode": 16.023255813953487,
+      "average_bitrate_change_kbps": 266.437272583452,
+      "visited_state_fraction": 0.6358024691358025
+    }
+  ],
+  "validation_qoe_mean": 44.43252677307849,
+  "validation_qoe_sample_std": 1.3258527640378133,
+  "archive_reference_30000": {
+    "path": "results/q_learning/tuning.csv",
+    "git_blob": "c8e8ef1e980584d9a5a1a8a4b884f25414aeb6bc",
+    "mean": 46.4801,
+    "sample_std": 1.9663
+  },
+  "difference_from_archive_mean": -2.0475732269215072,
+  "elapsed_seconds": 7.9985095000010915
+}
