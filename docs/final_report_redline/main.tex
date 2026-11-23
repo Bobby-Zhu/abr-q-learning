@@ -104,7 +104,8 @@ evaluated the frozen greedy policies from the beginning of each test trace.
 \paragraph{Baselines.}
 The fixed policy selects 1200 kbps for every chunk. The buffer-based rule
 uses a 10-second reservoir and a 40-second cushion to map buffer occupancy
-to a bitrate. The baselines use their declared defaults~\cite{implementation}.
+to a bitrate. The baselines use their declared defaults~\cite{implementation}. Section~4
+also reports a buffer rule tuned on validation as a robustness check.
 
 \section{Results and Discussion}
 
@@ -133,10 +134,17 @@ the five agents' QoE on each slice and subtracted the buffer baseline on that
 slice. We resampled the 20 original recordings with replacement 10,000 times
 and averaged the slice differences in each draw, keeping sibling slices
 together. The 95\% percentile interval for the 2.86-point gain was
-\([0.20, 5.98]\) QoE points per video.}
-The fixed-rate policy incurred over a minute of
+\([0.20, 5.98]\) QoE points per video.} The fixed-rate policy incurred over a minute of
 stall time per video on average, consistent with its inability to lower the
 rate when the connection cannot sustain 1200 kbps~\cite{testresults}.
+
+The default buffer rule was not tuned. We therefore searched its reservoir
+(0--15 s) and cushion (10--50 s) on validation only. The best setting, a
+10-second reservoir and 25-second cushion, scored 44.97 on validation against
+43.94 for the default and 37.19 on test against 36.78. Q-learning's advantage
+over this tuned rule was 2.45 points, with a paired recording-bootstrap
+interval of \([0.15, 5.01]\). Section~\ref{sec:learned} explains why tuning
+the buffer thresholds closes little of the gap.
 
 \begin{reviewedit}
 \subsection{What Accounts for the QoE Gain?}
@@ -144,9 +152,12 @@ rate when the connection cannot sustain 1200 kbps~\cite{testresults}.
 The reward breakdown explains why a policy with more rebuffering can still
 score higher. Across all test traces, the higher bitrates added 5.25 QoE
 points per video. Additional stalls cost 1.34 points, and larger cumulative
-bitrate changes cost 1.05 points. Q-learning made fewer switches on average,
-yet the sum of their magnitudes was higher. The smoothness term penalizes
-that sum.
+bitrate changes cost 1.05 points. Q-learning made fewer switches on average
+(Table~\ref{tab:test}), yet the sum of their magnitudes was higher, and the
+smoothness term penalizes that sum. The buffer rule climbs its linear ramp one
+rung at a time, so only 3.3\% of its switches exceeded 1000 kbps. Q-learning's
+action follows the throughput bin, and 19.1\% of its switches exceeded
+1000 kbps.
 
 \begin{table}[htbp]
 \reviewcolor
@@ -176,12 +187,13 @@ for FCC. The HSDPA mean remains uncertain, and the FCC estimate rests on
 six recordings.
 
 \subsection{What Did the Agent Learn?}
+\label{sec:learned}
 
 We replayed the five archived test agents and the buffer rule decision by
 decision. The replay reproduces every committed per-slice score. In the states
 Q-learning visited on test, it chose a higher bitrate than the buffer rule would
 have chosen in the same state 62.7\% of the time and a lower one only 2.0\% of
-the time. Figure~\ref{fig:policy}c shows why. With 14--19 seconds buffered,
+the time. Figure~\ref{fig:policy}c shows the reason. With 14--19 seconds buffered,
 Q-learning's mean choice rises from 341 kbps at the lowest throughput estimate
 to 3730 kbps at the highest. The buffer rule stays near 400 kbps in the same
 states because it does not read throughput.
@@ -204,7 +216,9 @@ reaches 3.53 points by chunk 19. The remaining 30 chunks give back 0.67 points n
 grows. Q-learning leaves the lowest rate as soon as measured throughput allows.
 Its mean bitrate over the first ten chunks was 783 kbps, against 456 kbps.
 The start-up boundary is not sharp, so the split depends on the cutoff: chunks
-1--10 contribute 2.54 points and chunks 1--15 contribute 3.33.
+1--10 contribute 2.54 points and chunks 1--15 contribute 3.33. No setting of
+the buffer thresholds can reproduce this behavior, because the rule never sees
+throughput.
 
 \textbf{In steady state, Q-learning holds a smaller reserve.} After start-up it
 keeps about 18 seconds buffered, against about 28 for the buffer rule
@@ -214,52 +228,35 @@ buffer for bitrate paid off on FCC, where chunks 11--49 added 3.05 points. On
 HSDPA the same chunks lost 1.08 points. A larger reserve absorbs a throughput
 collapse that a smaller one cannot. The selected discount of 0.5 weights only a
 few chunks ahead, which may undervalue a reserve whose benefit is rare and
-delayed. The grid did not isolate this effect, so it remains a hypothesis.
+delayed. Shorter horizons scored higher on average in validation
+(Section~\ref{sec:stability}), so the lean buffer may be a deliberate average-case
+tradeoff rather than a training defect. The grid did not isolate this effect,
+so it remains a hypothesis.
 
-\textbf{Fewer switches, larger jumps.} The buffer rule climbs its linear ramp
-one rung at a time, and 3.3\% of its switches exceeded 1000 kbps. Q-learning's
-action follows the throughput bin, and 19.1\% of its switches exceeded 1000 kbps.
-This explains the larger switching penalty in Table~\ref{tab:decomposition}.
-
-\textbf{Stalls follow sudden collapses, not unfamiliar states.} Although about
-35\% of states were never visited in training, 97.8\% of test decisions fell
+\textbf{Stalls follow sudden collapses, not unfamiliar states.} About 35\% of
+the fine-bin states were never visited in training, but 97.8\% of test decisions fell
 in states visited more than 1000 times, and none fell in an unvisited state.
 States with at most 1000 visits account for 1.9\% of rebuffering. Requests
 whose delivered throughput fell below half of the prior estimate were 1.8\% of
-post-start decisions but caused 57\% of post-start rebuffering. Q-learning was
-not more aggressive relative to its estimate than the buffer rule. Both
+post-start decisions but caused 57\% of post-start rebuffering. On average, Q-learning
+was not more aggressive relative to its estimate than the buffer rule. Both
 requested more than the estimate in about a third of decisions, with the same
 median ratio of 0.87. The difference is the reserve when a collapse arrives.
-The chunk 39 replay below is one such case.
+The chunk 39 replay in Section~\ref{sec:cases} is one such case.
 
 \subsection{Two Outcomes Within the Same HSDPA Recording}
+\label{sec:cases}
 
 Two slices of \texttt{norway\_car\_1} illustrate how the tradeoff changes
 within a single recording. We chose the pair with the largest QoE contrast
 among same-recording pairs that won in one slice and lost in the other for
 all five seeds. The examples illustrate failure and success modes.
-
-\begin{table}[htbp]
-\reviewcolor
-\centering
-\small
-\caption{Buffer-based to Q-learning comparison on two slices of
-\texttt{norway\_car\_1}. Q-learning metrics average the five seeds.}
-\label{tab:cases}
-\begin{tabular}{lrrr}
-\toprule
-Slice & Bitrate (kbps) & Rebuffering (s) & QoE difference \\
-\midrule
-\texttt{part0} & \(1712\to2013\) & \(0.56\to0.56\) & \(+21.35\) \\
-\texttt{part2} & \(981\to1123\) & \(0.53\to10.87\) & \(-44.02\) \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-On \texttt{part0}, Q-learning selected higher rates without extending the
-stall time. On \texttt{part2}, its bitrate reward increased by 7.00 points,
-but the extra 10.34 seconds of stalling cost 44.44 points before the
-additional switching penalty.
+On \texttt{part0}, Q-learning raised the mean bitrate from 1712 to 2013 kbps
+with the same 0.56 seconds of stalling and gained 21.35 points (averaged over
+the five seeds). On \texttt{part2}, it raised the mean bitrate from 981 to
+1123 kbps, but stalling grew from 0.53 to 10.87 seconds and it lost 44.02
+points. The higher bitrate added 7.00 points, while the extra 10.34 seconds of
+stalling cost 44.44 points before the additional switching penalty.
 
 We replayed the first archived agent (seed 100) from the beginning of
 \texttt{part2}. It stalled twice after startup (Table~\ref{tab:replay}).
@@ -308,14 +305,16 @@ HSDPA). The association
 persisted when averaging within each of the 20 original recordings
 (\(r=-0.628\)). Mean bandwidth and variability were also associated with the
 gain. In addition, fixed-time link bandwidth differs from the actual chunk
-throughput measured by the agent. The results are consistent with a benefit
-from more informative throughput observations. Establishing the mechanism
-would require controlling for bandwidth and comparing decision-level
-replays across more recordings~\cite{dynamics}.
+throughput measured by the agent. These slice-level associations agree with the
+decision-level replay in Section~\ref{sec:learned}: most post-start
+rebuffering followed downloads much slower than the agent's estimate, and
+such surprises are more frequent where throughput is harder to forecast. Both
+analyses are correlational. Establishing the mechanism would require
+controlling for mean bandwidth and testing on more recordings~\cite{dynamics}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.83\linewidth]{images/test_qoe_relationship.pdf}
+\includegraphics[width=0.72\linewidth]{images/test_qoe_relationship.pdf}
 \caption{The gain over buffer-based adaptation is often larger at lower
 normalized forecast error. Each point represents a test slice. Slices can
 share an original recording.}
@@ -323,25 +322,12 @@ share an original recording.}
 \end{figure}
 
 \subsection{Validation Stability and Scaling}
+\label{sec:stability}
 
 Fine discretization appeared throughout the top validation configurations,
 and lower learning rates and shorter discount horizons performed better in
 the explored grid. Several leading configurations were within roughly one
-seed standard deviation, so the exact ranking is uncertain. About 35\% of
-the fine-bin states were unvisited during training, but the greedy test
-trajectories stayed in well-visited states, so sparse coverage did not drive
-the observed failures. The current experiments leave open how the policy
-would behave with other videos~\cite{implementation}.
-
-\paragraph{Validation-tuned buffer baseline:}
-To check whether the gain depends on untuned baseline defaults, we searched
-the buffer rule's reservoir (0--15 s) and cushion (10--50 s) on validation only.
-The best setting, a 10-second reservoir and 25-second cushion, scored 44.97 on
-validation against 43.94 for the default. On test it scored 37.19 against 36.78.
-Q-learning's advantage over the tuned rule was 2.45 points, with a 95\%
-paired recording-bootstrap interval of \([0.15, 5.01]\). No reservoir setting
-lets a buffer-only rule react to throughput during start-up, which is where
-most of the gain arises.
+seed standard deviation, so the exact ranking is uncertain~\cite{implementation}.
 
 \begin{reviewedit}
 \paragraph{Shorter training budget:}
@@ -360,7 +346,7 @@ configuration.
 \section{Conclusion}
 
 On the shared simulator, tabular Q-learning achieved higher average QoE than
-the two baseline policies, including a validation-tuned buffer rule. The gain
+both baselines and than a validation-tuned version of the buffer rule. The gain
 came mainly from using throughput to leave the lowest bitrate early in the
 video. In steady state the agent traded buffer for bitrate, which helped on
 FCC and hurt on HSDPA, where sudden throughput collapses caused most of its
