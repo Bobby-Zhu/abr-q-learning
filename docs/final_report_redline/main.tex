@@ -312,6 +312,19 @@ segments can share the same network conditions. Keeping the QoE components
 alongside the total score also makes it possible to identify why a policy
 wins or fails on a particular trace.
 
+\paragraph{Boqi (Bobby) Zhu:}
+I adapted MERINA's simulator and implemented the fixed-bitrate and buffer-based
+policies with shared configuration, QoE evaluation, and automated tests.
+I also analyzed FCC and HSDPA trace dynamics on a common five-second grid,
+comparing variability, autocorrelation, and forecast errors and relating
+these measurements to the saved Q-learning gains over the buffer baseline.
+
+I learned that a plausible explanation for a performance difference needs
+evidence from the data. HSDPA had higher autocorrelation but slightly larger
+normalized forecast error, which taught me to distinguish temporal correlation
+from prediction accuracy and to avoid treating an association as proof of a
+causal explanation.
+
 \paragraph{Xin Chen:}
 I broke down the test QoE gap by reward component and compared two slices
 from the same HSDPA recording to examine when Q-learning helped or hurt.
