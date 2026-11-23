@@ -5,7 +5,7 @@
 
 \definecolor{reviewred}{RGB}{153,24,30}
 \newif\ifreview
-\reviewtrue
+\reviewfalse
 \newcommand{\reviewcolor}{\ifreview\color{reviewred}\fi}
 \newcommand{\reviewtext}[1]{{\reviewcolor #1}}
 \newenvironment{reviewedit}{\reviewcolor}{}
@@ -14,7 +14,7 @@
 \setlength{\parskip}{0.42\baselineskip}
 \setlength{\emergencystretch}{1.5em}
 \title{\vspace{-1.2em}Adaptive Video Bitrate Selection\\under Varying Network Conditions}
-\author{CSE 250A Final Project\\\teamcheck{Add the team members' names.}}
+\author{CSE 250A Final Project\\Boqi (Bobby) Zhu, Hanyue Zhang, Qinchuan Zhang, and Xin Chen}
 \date{}
 
 \begin{document}
@@ -276,7 +276,7 @@ under the selected settings. They leave open how the policy would behave
 with other videos or under a tuned buffer baseline~\cite{implementation}.
 
 \begin{reviewedit}
-\paragraph{Shorter training budget.}
+\paragraph{Shorter training budget:}
 We trained the selected configuration for 10,000 episodes with the original
 five tuning seeds (0--4) and evaluated the greedy policies on the same 129
 validation traces. The exploration rate decayed over the first 80\% of each
@@ -312,6 +312,16 @@ tuning a policy. Grouping by original recording matters when successive
 segments can share the same network conditions. Keeping the QoE components
 alongside the total score also makes it possible to identify why a policy
 wins or fails on a particular trace.
+
+\paragraph{Xin Chen:}
+I broke down the test QoE gap by reward component and compared two slices
+from the same HSDPA recording to examine when Q-learning helped or hurt.
+I also ran the 10,000-episode validation experiment and compared it with the
+archived 30,000-episode setting using the same validation traces and seeds.
+
+I learned to check what each reward term measures. Q-learning switched
+bitrates less often than the buffer baseline, but the changes added up to a
+larger switching penalty.
 
 \paragraph{AI use.}
 ChatGPT assisted with project brainstorming and proposal wording. The
