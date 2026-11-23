@@ -175,6 +175,63 @@ gave a 95\% interval of \([-1.30, 4.26]\) for HSDPA and \([1.46, 12.02]\)
 for FCC. The HSDPA mean remains uncertain, and the FCC estimate rests on
 six recordings.
 
+\subsection{What Did the Agent Learn?}
+
+We replayed the five archived test agents and the buffer rule decision by
+decision. The replay reproduces every committed per-slice score. In the states
+Q-learning visited on test, it chose a higher bitrate than the buffer rule would
+have chosen in the same state 62.7\% of the time and a lower one only 2.0\% of
+the time. Figure~\ref{fig:policy}c shows why. With 14--19 seconds buffered,
+Q-learning's mean choice rises from 341 kbps at the lowest throughput estimate
+to 3730 kbps at the highest. The buffer rule stays near 400 kbps in the same
+states because it does not read throughput.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{images/policy_behavior.pdf}
+\caption{(a) Cumulative per-chunk QoE of Q-learning minus the buffer rule,
+averaged over test slices and seeds. (b) Mean buffer before each request.
+(c) Mean bitrate chosen by Q-learning in its own test states with 14--19 s
+buffered, by throughput-estimate bin, and the bitrate the buffer rule assigns
+to those states.}
+\label{fig:policy}
+\end{figure}
+
+\textbf{The gain is concentrated in the start-up phase.} The cumulative advantage
+reaches 3.53 points by chunk 19. The remaining 30 chunks give back 0.67 points net
+(Figure~\ref{fig:policy}a). The buffer rule requests 300 kbps until its
+10-second reservoir fills, about five chunks, and then climbs as the buffer
+grows. Q-learning leaves the lowest rate as soon as measured throughput allows.
+Its mean bitrate over the first ten chunks was 783 kbps, against 456 kbps.
+The start-up boundary is not sharp, so the split depends on the cutoff: chunks
+1--10 contribute 2.54 points and chunks 1--15 contribute 3.33.
+
+\textbf{In steady state, Q-learning holds a smaller reserve.} After start-up it
+keeps about 18 seconds buffered, against about 28 for the buffer rule
+(Figure~\ref{fig:policy}b). The buffer rule spends 17\% of its decisions
+above 35 seconds, a level Q-learning reached in 16 of 32,585 decisions. Using
+buffer for bitrate paid off on FCC, where chunks 11--49 added 3.05 points. On
+HSDPA the same chunks lost 1.08 points. A larger reserve absorbs a throughput
+collapse that a smaller one cannot. The selected discount of 0.5 weights only a
+few chunks ahead, which may undervalue a reserve whose benefit is rare and
+delayed. The grid did not isolate this effect, so it remains a hypothesis.
+
+\textbf{Fewer switches, larger jumps.} The buffer rule climbs its linear ramp
+one rung at a time, and 3.3\% of its switches exceeded 1000 kbps. Q-learning's
+action follows the throughput bin, and 19.1\% of its switches exceeded 1000 kbps.
+This explains the larger switching penalty in Table~\ref{tab:decomposition}.
+
+\textbf{Stalls follow sudden collapses, not unfamiliar states.} Although about
+35\% of states were never visited in training, 97.8\% of test decisions fell
+in states visited more than 1000 times, and none fell in an unvisited state.
+States with at most 1000 visits account for 1.9\% of rebuffering. Requests
+whose delivered throughput fell below half of the prior estimate were 1.8\% of
+post-start decisions but caused 57\% of post-start rebuffering. Q-learning was
+not more aggressive relative to its estimate than the buffer rule. Both
+requested more than the estimate in about a third of decisions, with the same
+median ratio of 0.87. The difference is the reserve when a collapse arrives.
+The chunk 39 replay below is one such case.
+
 \subsection{Two Outcomes Within the Same HSDPA Recording}
 
 Two slices of \texttt{norway\_car\_1} illustrate how the tradeoff changes
@@ -271,11 +328,20 @@ Fine discretization appeared throughout the top validation configurations,
 and lower learning rates and shorter discount horizons performed better in
 the explored grid. Several leading configurations were within roughly one
 seed standard deviation, so the exact ranking is uncertain. About 35\% of
-the fine-bin states were unvisited during training. Increasing the number of
-bins would create more entries to estimate, especially for rare combinations
-of throughput and buffer. The current experiments support a useful policy
-under the selected settings. They leave open how the policy would behave
-with other videos or under a tuned buffer baseline~\cite{implementation}.
+the fine-bin states were unvisited during training, but the greedy test
+trajectories stayed in well-visited states, so sparse coverage did not drive
+the observed failures. The current experiments leave open how the policy
+would behave with other videos~\cite{implementation}.
+
+\paragraph{Validation-tuned buffer baseline:}
+To check whether the gain depends on untuned baseline defaults, we searched
+the buffer rule's reservoir (0--15 s) and cushion (10--50 s) on validation only.
+The best setting, a 10-second reservoir and 25-second cushion, scored 44.97 on
+validation against 43.94 for the default. On test it scored 37.19 against 36.78.
+Q-learning's advantage over the tuned rule was 2.45 points, with a 95\%
+paired recording-bootstrap interval of \([0.15, 5.01]\). No reservoir setting
+lets a buffer-only rule react to throughput during start-up, which is where
+most of the gain arises.
 
 \begin{reviewedit}
 \paragraph{Shorter training budget:}
@@ -294,15 +360,28 @@ configuration.
 \section{Conclusion}
 
 On the shared simulator, tabular Q-learning achieved higher average QoE than
-the two baseline policies. The gain came mainly from selecting higher
-bitrates and was clearest on FCC. The HSDPA examples show how quickly stalls
-can outweigh an apparent gain in picture quality. The evaluation used one
-video, a small number of source recordings, and untuned baseline defaults.
-\reviewtext{The chunk 39 replay suggests a follow-up on validation: test
-whether discounting the throughput estimate after sharp fluctuations
-reduces stall costs enough to offset any loss in bitrate reward, including
-when the buffer exceeds ten seconds.} A validation-tuned buffer rule and multiple
-videos would provide stronger comparisons.
+the two baseline policies, including a validation-tuned buffer rule. The gain
+came mainly from using throughput to leave the lowest bitrate early in the
+video. In steady state the agent traded buffer for bitrate, which helped on
+FCC and hurt on HSDPA, where sudden throughput collapses caused most of its
+stalls. The evaluation used one video and a small number of source recordings.
+
+\paragraph{Next steps.} Each follow-up targets one finding and would be
+selected on validation.
+(1)~Keep a reserve when throughput is volatile, by adding a variability bin to
+the state or a small low-buffer penalty, and measure post-start stall time on
+HSDPA.
+(2)~Test whether a longer discount horizon, with more training episodes,
+raises the steady-state buffer.
+(3)~Restrict actions to one or two rungs from the previous bitrate to reduce
+the large-jump penalty.
+(4)~Combine the learned start-up behavior with a buffer rule afterwards, to
+test whether the steady-state policy adds value on HSDPA.
+(5)~Following the chunk 39 replay, discount the throughput estimate after sharp
+fluctuations.
+Finer state bins are a lower priority, because test decisions already stay in
+well-visited states. More videos and recordings would strengthen every
+comparison.
 
 \section{Reflections \& Contributions}
 
@@ -351,7 +430,8 @@ overstated the final scores.
 \paragraph{AI use.}
 ChatGPT assisted with project brainstorming and proposal wording. The
 merged Q-learning implementation PR records Claude Code assistance. Codex
-helped check the saved results and prepare this review draft.
+helped check the saved results and prepare this review draft. Claude Code
+assisted with the decision-level policy analysis and the tuned-baseline check.
 
 \appendix
 \section{State Bins and Reproduction}
@@ -364,7 +444,9 @@ analysis scripts at commit \texttt{2169df2}.
 \reviewtext{The accompanying scripts in \texttt{docs/technical\_report/}
 reproduce the split audit (\texttt{check\_splits.py}), the chunk replay
 (\texttt{replay\_case.py}), and the paired bootstrap intervals
-(\texttt{recording\_intervals.py}). Each accepts \texttt{--repo} followed
+(\texttt{recording\_intervals.py}), the decision-level policy analysis and
+Figure~\ref{fig:policy} (\texttt{policy\_analysis.py}), and the tuned buffer
+baseline (\texttt{tuned\_buffer.py}). Each accepts \texttt{--repo} followed
 by the path to the repository.}
 
 \begin{thebibliography}{9}
