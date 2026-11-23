@@ -9,7 +9,6 @@
 \newcommand{\reviewcolor}{\ifreview\color{reviewred}\fi}
 \newcommand{\reviewtext}[1]{{\reviewcolor #1}}
 \newenvironment{reviewedit}{\reviewcolor}{}
-\newcommand{\teamcheck}[1]{\textbf{Team review:} #1}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.42\baselineskip}
 \setlength{\emergencystretch}{1.5em}
@@ -245,7 +244,10 @@ properties. Correlation measures persistence, while forecast error measures
 the accuracy of a specific predictor.
 
 Across the 133 test slices, three-window forecast error was negatively
-correlated with Q-learning's QoE advantage (\(r=-0.464\)). The association
+correlated with Q-learning's QoE advantage (\(r=-0.464\)). This value pools
+all test slices from both sources, while Figure~\ref{fig:forecast} reports
+the correlation within each source (\(r=-0.25\) for FCC and \(r=-0.52\) for
+HSDPA). The association
 persisted when averaging within each of the 20 original recordings
 (\(r=-0.628\)). Mean bandwidth and variability were also associated with the
 gain. In addition, fixed-time link bandwidth differs from the actual chunk
@@ -304,9 +306,6 @@ videos would provide stronger comparisons.
 
 \section{Reflections \& Contributions}
 
-\teamcheck{Each member should add a name, one or two sentences describing
-their verified work, and a brief reflection on what they learned.}
-
 One practical lesson from this project is to define the holdout unit before
 tuning a policy. Grouping by original recording matters when successive
 segments can share the same network conditions. Keeping the QoE components
@@ -340,8 +339,6 @@ overstated the final scores.
 ChatGPT assisted with project brainstorming and proposal wording. The
 merged Q-learning implementation PR records Claude Code assistance. Codex
 helped check the saved results and prepare this review draft.
-\teamcheck{Confirm the full scope of the team's use and adapt this statement
-before submission.}
 
 \appendix
 \section{State Bins and Reproduction}

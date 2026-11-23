@@ -141,16 +141,9 @@ def main() -> None:
             axis.axhline(0, color="#777777", linestyle="--", linewidth=0.9)
             axis.set_xlabel("Three-window forecast NMAE (lower = more accurate)")
             axis.grid(alpha=0.18)
-        axes[0].set_ylabel("Saved Q-learning minus buffer QoE per video")
+        axes[0].set_ylabel("Q-learning minus buffer QoE per video")
         figure.suptitle(f"Forecast error and policy advantage — {args.split} split")
-        figure.text(
-            0.5, 0.035,
-            "Each point is a trace; Q-learning QoE is averaged over the saved seeds.\n"
-            "Exploratory association only: a proxy forecast error "
-            "does not establish the cause of a policy gain.",
-            ha="center", fontsize=9,
-        )
-        figure.tight_layout(rect=(0, 0.12, 1, 0.95))
+        figure.tight_layout(rect=(0, 0, 1, 0.95))
         save_figure(figure, directory, f"{args.split}_qoe_relationship")
         plt.close(figure)
     print(f"Figures saved to {directory}")
