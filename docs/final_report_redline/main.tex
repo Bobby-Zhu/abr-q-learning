@@ -413,6 +413,20 @@ I learned that the split can matter as much as the model. Neighbouring slices
 of the same trip made validation look like test, so tuning on it would have
 overstated the final scores.
 
+\paragraph{Qinchuan Zhang:}
+I checked the training and validation traces for shared recording IDs and
+repeated bandwidth sequences before and after the split fix. I also replayed
+the HSDPA failure case to trace two stalls back to individual chunk requests.
+To assess uncertainty in the overall QoE gain, I computed confidence intervals
+by resampling whole recordings so that adjacent slices stayed together.
+
+I learned that a large buffer can still run out during a single download. In
+the replay, the player had 17.72 seconds of video buffered before requesting
+chunk 39, but the download took 26.52 seconds. Looking at that request helped
+me understand something the average QoE score could not show on its own: the
+bitrate decision looked much riskier once I compared the recent throughput
+estimate with what the next download actually delivered.
+
 \paragraph{AI use.}
 ChatGPT assisted with project brainstorming and proposal wording. The
 merged Q-learning implementation PR records Claude Code assistance. Codex
