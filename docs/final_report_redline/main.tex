@@ -323,6 +323,19 @@ I learned to check what each reward term measures. Q-learning switched
 bitrates less often than the buffer baseline, but the changes added up to a
 larger switching penalty.
 
+\paragraph{Hanyue Zhang:}
+I audited the data splits and found that the holdout files were consecutive
+slices of 39 longer recordings, 36 of which appeared in both validation and
+test. I regrouped the holdout by recording and added a check that fails if a
+recording crosses splits. I also implemented the tabular Q-learning agent,
+tuned it on validation only, ran the five-seed test comparison against both
+baselines, and fixed a simulator edge case where a download ending exactly on
+a trace timestamp stopped the episode.
+
+I learned that the split can matter as much as the model. Neighbouring slices
+of the same trip made validation look like test, so tuning on it would have
+overstated the final scores.
+
 \paragraph{AI use.}
 ChatGPT assisted with project brainstorming and proposal wording. The
 merged Q-learning implementation PR records Claude Code assistance. Codex
