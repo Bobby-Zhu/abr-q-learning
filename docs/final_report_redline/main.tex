@@ -226,12 +226,11 @@ keeps about 18 seconds buffered, against about 28 for the buffer rule
 above 35 seconds, a level Q-learning reached in 16 of 32,585 decisions. Using
 buffer for bitrate paid off on FCC, where chunks 11--49 added 3.05 points. On
 HSDPA the same chunks lost 1.08 points. A larger reserve absorbs a throughput
-collapse that a smaller one cannot. The selected discount of 0.5 weights only a
-few chunks ahead, which may undervalue a reserve whose benefit is rare and
-delayed. Shorter horizons scored higher on average in validation
-(Section~\ref{sec:stability}), so the lean buffer may be a deliberate average-case
-tradeoff rather than a training defect. The grid did not isolate this effect,
-so it remains a hypothesis.
+collapse that a smaller one cannot. One possible cause of the lean buffer is the
+selected discount of 0.5, which weights only a few chunks ahead. A validation
+experiment (Section~\ref{sec:stability}) shows that a longer horizon does raise
+the reserve by about 3 seconds, but the extra reserve did not improve average
+QoE on either source.
 
 \textbf{Stalls follow sudden collapses, not unfamiliar states.} About 35\% of
 the fine-bin states were never visited in training, but 97.8\% of test decisions fell
@@ -343,6 +342,46 @@ The comparison supports keeping the 30,000-episode budget for the reported
 configuration.
 \end{reviewedit}
 
+\paragraph{Discount horizon and buffer reserve:}
+To test whether the short horizon explains the lean steady-state buffer, we
+retrained the selected configuration with discounts of 0.5, 0.8, 0.9, and 0.95
+using the five tuning seeds and evaluated on validation only
+(Table~\ref{tab:discount}). With 30,000 episodes, longer horizons did not change
+the reserve and scored lower with larger seed variation, consistent with
+undertraining. With 90,000 episodes, discounts of 0.8 and 0.9 held about
+3 seconds more buffer in chunks 20--49 and cut rebuffering after chunk 10 by
+about 30\%. The lower bitrate offset that saving, so validation QoE did not
+improve; for \(\gamma=0.9\) versus 0.5, HSDPA QoE was 49.48 versus 49.52 and
+FCC QoE was 37.47 versus 38.48. A discount of 0.95 scored lower still. The horizon therefore explains part of the lean
+buffer, but a uniformly larger reserve does not pay for itself under this
+reward. Tripling the budget for \(\gamma=0.5\) also gave no gain
+(45.84 versus 46.48).
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Validation results for the selected configuration with different
+discounts, averaged over five tuning seeds (QoE: mean \(\pm\) standard
+deviation). Late rebuffering is seconds per video after chunk 10; late buffer
+is the mean buffer before requests 20--49.}
+\label{tab:discount}
+\begin{tabular}{rrrrrr}
+\toprule
+Episodes & \(\gamma\) & QoE & Bitrate (kbps) & Late rebuffer (s) & Late buffer (s) \\
+\midrule
+30,000 & 0.5 & \(46.48\pm1.97\) & 1374 & 0.76 & 17.9 \\
+30,000 & 0.8 & \(45.23\pm2.61\) & 1370 & 0.68 & 18.0 \\
+30,000 & 0.9 & \(43.06\pm4.07\) & 1372 & 0.72 & 17.9 \\
+30,000 & 0.95 & \(42.56\pm4.02\) & 1368 & 0.76 & 18.2 \\
+\midrule
+90,000 & 0.5 & \(45.84\pm1.19\) & 1365 & 0.72 & 18.7 \\
+90,000 & 0.8 & \(45.22\pm3.88\) & 1351 & 0.51 & 21.2 \\
+90,000 & 0.9 & \(45.47\pm0.84\) & 1341 & 0.51 & 21.7 \\
+90,000 & 0.95 & \(40.23\pm0.82\) & 1355 & 0.62 & 20.2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Conclusion}
 
 On the shared simulator, tabular Q-learning achieved higher average QoE than
@@ -354,16 +393,14 @@ stalls. The evaluation used one video and a small number of source recordings.
 
 \paragraph{Next steps.} Each follow-up targets one finding and would be
 selected on validation.
-(1)~Keep a reserve when throughput is volatile, by adding a variability bin to
-the state or a small low-buffer penalty, and measure post-start stall time on
-HSDPA.
-(2)~Test whether a longer discount horizon, with more training episodes,
-raises the steady-state buffer.
-(3)~Restrict actions to one or two rungs from the previous bitrate to reduce
+(1)~Keep a reserve only when throughput is volatile, by adding a variability
+bin to the state, and measure post-start stall time on HSDPA. A uniformly
+larger reserve from a longer horizon did not raise validation QoE.
+(2)~Restrict actions to one or two rungs from the previous bitrate to reduce
 the large-jump penalty.
-(4)~Combine the learned start-up behavior with a buffer rule afterwards, to
+(3)~Combine the learned start-up behavior with a buffer rule afterwards, to
 test whether the steady-state policy adds value on HSDPA.
-(5)~Following the chunk 39 replay, discount the throughput estimate after sharp
+(4)~Following the chunk 39 replay, discount the throughput estimate after sharp
 fluctuations.
 Finer state bins are a lower priority, because test decisions already stay in
 well-visited states. More videos and recordings would strengthen every
@@ -446,7 +483,8 @@ reproduce the split audit (\texttt{check\_splits.py}), the chunk replay
 (\texttt{replay\_case.py}), and the paired bootstrap intervals
 (\texttt{recording\_intervals.py}), the decision-level policy analysis and
 Figure~\ref{fig:policy} (\texttt{policy\_analysis.py}), and the tuned buffer
-baseline (\texttt{tuned\_buffer.py}). Each accepts \texttt{--repo} followed
+baseline (\texttt{tuned\_buffer.py}), and the discount experiment
+(\texttt{discount\_buffer.py}). Each accepts \texttt{--repo} followed
 by the path to the repository.}
 
 \begin{thebibliography}{9}
