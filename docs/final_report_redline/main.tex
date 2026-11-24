@@ -445,6 +445,8 @@ recording crosses splits. I also implemented the tabular Q-learning agent,
 tuned it on validation only, ran the five-seed test comparison against both
 baselines, and fixed a simulator edge case where a download ending exactly on
 a trace timestamp stopped the episode.
+I also added the decision-level replay, tuned-buffer comparison, and
+discount-factor experiment.
 
 I learned that the split can matter as much as the model. Neighbouring slices
 of the same trip made validation look like test, so tuning on it would have
@@ -465,10 +467,10 @@ bitrate decision looked much riskier once I compared the recent throughput
 estimate with what the next download actually delivered.
 
 \paragraph{AI use.}
-ChatGPT assisted with project brainstorming and proposal wording. The
-merged Q-learning implementation PR records Claude Code assistance. Codex
-helped check the saved results and prepare this review draft. Claude Code
-assisted with the decision-level policy analysis and the tuned-baseline check.
+ChatGPT assisted with project brainstorming and proposal wording. We also
+used AI tools to check saved results and draft parts of the report. Claude
+Code assisted with the Q-learning implementation, decision-level policy
+analysis, and tuned-baseline check.
 
 \appendix
 \section{State Bins and Reproduction}
